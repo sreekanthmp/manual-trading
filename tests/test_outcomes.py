@@ -170,6 +170,33 @@ def test_target_two_is_followed_after_target_one_with_the_invalidation_still_the
     assert one(READY, bars((10, 1, 25005, 25050, 25000, 25049)))["target2_reached"] is False  # the day ended
 
 
+def test_one_candle_that_reaches_both_targets_counts_target_two_as_reached():
+    r = one(READY, bars((10, 1, 25005, 25110, 25000, 25100)))
+    assert r["outcome"] == "target1" and r["target2_reached"] is True
+    touching = bars((10, 1, 25005, 25110, 24965, 25100))  # ... unless the same candle also touched the invalidation: then it is the invalidation, and there is no target-2 verdict
+    assert one(READY, touching)["outcome"] == "invalidation" and one(READY, touching)["target2_reached"] is None
+
+
+def test_a_price_exactly_at_the_invalidation_has_no_risk_to_measure_and_a_tick_away_has_some():
+    r = one([rec(t(10, 0, 20), 24970.0, [setup()])], bars(flat(10, 1, 24990)))
+    assert r["outcome"] is None and "no risk" in r["note"] and r["risk"] is None
+    r = one([rec(t(10, 0, 20), 24970.5, [setup()])], bars(flat(10, 1, 24990)))
+    assert r["risk"] == pytest.approx(0.5) and r["outcome"] == "unresolved"
+    short_exact = [rec(t(10, 0, 20), 25035.0, [setup("x:bear:1", "PE", inv=25035.0)])]
+    assert one(short_exact, bars(flat(10, 1, 25000)))["outcome"] is None
+
+
+def test_a_setup_ended_before_a_candle_began_is_ended_before_that_candle_can_touch_a_level():
+    sid = "trend_pullback:bull:1"
+    records = READY + [rec(t(10, 4, 10), 24990.0, [], [ended(sid, t(10, 4, 10), "invalidated")])]
+    after = bars(flat(10, 1, 25000), flat(10, 2, 24995), flat(10, 3, 24992), flat(10, 4, 24990), (10, 5, 24990, 24990, 24965, 24970))  # the 10:05 candle breaks the level, after Prism ended the setup
+    r = one(records, after)
+    assert r["outcome"] == "setup_ended" and r["exit_price"] == 24990.0 and r["exit_at"] == t(10, 4, 10)
+    during = bars(flat(10, 1, 25000), flat(10, 2, 24995), flat(10, 3, 24992), (10, 4, 24990, 24990, 24965, 24970))  # the candle that CONTAINS the end is processed first
+    r = one(records, during)
+    assert r["outcome"] == "invalidation" and r["exit_at"] == t(10, 4)
+
+
 def test_there_is_no_target_two_verdict_for_a_trade_that_did_not_reach_target_one():
     assert one(READY, bars(flat(10, 1, 25010)))["target2_reached"] is None
 

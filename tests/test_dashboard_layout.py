@@ -13,10 +13,10 @@ from app.main import create_app
 HTML = (Path(__file__).resolve().parent.parent / "app" / "static" / "index.html").read_text(encoding="utf-8")
 
 
-def test_the_page_has_the_four_tabs_and_each_has_its_panel():
-    for name in ("overview", "options", "analysis", "journal"):
+def test_the_page_has_the_five_tabs_and_each_has_its_panel():  # (four until Stage 8 added Trades)
+    for name in ("overview", "options", "analysis", "journal", "trades"):
         assert f'data-tab="{name}"' in HTML and f'id="tab-{name}"' in HTML and f'id="tb-{name}"' in HTML, name
-    assert HTML.count('role="tab"') == 4 and HTML.count('role="tabpanel"') == 4
+    assert HTML.count('role="tab"') == 5 and HTML.count('role="tabpanel"') == 5
     assert re.search(r'<section class="tab" id="tab-overview"[^>]*>', HTML) and 'id="tab-overview" role="tabpanel" aria-labelledby="tb-overview" hidden' not in HTML  # the default page is shown
 
 
@@ -35,7 +35,8 @@ def test_there_is_one_websocket_and_no_polling_so_switching_tabs_never_reconnect
     assert "if (WS && WS.readyState <= 1) return;" in HTML  # a second connection is never opened
     show = HTML[HTML.index("function showTab"):HTML.index("document.addEventListener(\"click\"")]
     assert "connect(" not in show and "WS" not in show and "render(LAST)" in show  # a tab switch only redraws the last snapshot
-    assert HTML.count("fetch(") == 1 and 'fetch("/api/journal")' in HTML  # the only request the page makes: the Journal tab's one read-only GET
+    # the requests the page makes: the Journal tab's one read-only GET, and the one helper the Trades tab sends everything through (the trades it reads, a trade you log or void, a size you ask for): only when you ask, never on a timer
+    assert HTML.count("fetch(") == 2 and 'fetch("/api/journal")' in HTML and HTML.count("sendJson(") >= 4 and "setTimeout(loadTrades" not in HTML and "setInterval" not in HTML
 
 
 def test_the_page_keeps_the_open_sections_across_the_once_a_second_redraw_and_only_touches_the_page_when_something_changed():

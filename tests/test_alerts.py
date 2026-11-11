@@ -47,12 +47,24 @@ def at(snap, seconds):
 
 def play(tmp_path, snaps, env=None, then=()):
     """The page after those snapshots (and these extra steps); the final capture."""
-    steps = ([{"op": "env", **env}] if env is not None else []) + [msg(s) for s in snaps] + list(then) + [{"op": "capture", "label": "end"}]
+    steps = ([{"op": "env", **env}] if env is not None else []) + [msg(s) for s in snaps] + list(then)
+    steps += [{"op": "eval", "code": "document.getElementById('probe').textContent = JSON.stringify(ALERT_LOG)"}, {"op": "capture", "label": "end"}]  # (the log the page keeps: every event, newest first)
     return run_page(tmp_path, steps)[-1]
 
 
+def log_entries(state):
+    return json.loads(state["els"]["probe"]["text"])
+
+
 def log_text(state):
-    return words(state["els"].get("alertlog", {"html": ""})["html"])
+    """The events the page raised, newest first, as text (the page's ALERT_LOG)."""
+    return " ".join(f"{x['title']} {x['text']}" for x in log_entries(state))
+
+
+def line(state):
+    """What the page's one alert line says, as text, and its html."""
+    html = state["els"].get("alerts", {"html": ""})["html"]
+    return words(html), html
 
 
 def quiet(state):
@@ -277,6 +289,11 @@ def test_popups_need_the_browsers_permission(tmp_path, base):
         assert st["fx"]["tones"] == SOUND["act"] and st["fx"]["notes"] == []  # still a sound and a log entry
 
 
+def test_sound_mode_never_pops_up_even_when_the_browser_would_allow_it(tmp_path, base):
+    st = play(tmp_path, [staged(base, "CONFIRMED"), base], env={"store": {MODE_KEY: "sound"}, "permission": "granted"})
+    assert st["fx"]["tones"] == SOUND["act"] and st["fx"]["notes"] == []
+
+
 def test_a_popup_carries_the_title_the_text_and_a_tag_and_stays_for_an_urgent_one(tmp_path, base):
     st = play(tmp_path, [staged(base, "CONFIRMED"), base], env={"store": {MODE_KEY: "sound + popup"}, "permission": "granted"})
     (n,) = st["fx"]["notes"]
@@ -340,6 +357,46 @@ def test_clear_empties_the_log_and_the_count(tmp_path, base):
     assert log_text(st) == "" and st["title"] == "Prism Market Data"
 
 
+# -- the events are in the page's ONE alert line (the Overview has to stay on one screen), not in a second banner -------------------------------------------
+def test_a_setup_that_became_ready_is_on_the_one_alert_line_in_green_with_what_to_look_at(tmp_path, base):
+    st = play(tmp_path, [staged(base, "CONFIRMED"), base])
+    text, html = line(st)
+    assert html.count("<details") == 1 and 'class="alerts act"' in html and "1 alert" in text and "BUY CE ready: Trend Pullback" in text
+    assert "entry area 24281.00" in text and 'id="alert-clear"' in html and "alertlog" not in st["els"]  # one line: no banner of its own
+
+
+def test_an_event_leaves_the_line_after_ten_minutes_and_stays_in_the_log(tmp_path, base):
+    snaps = [staged(base, "CONFIRMED"), at(base, 5)]
+    assert "BUY CE ready" in line(play(tmp_path, snaps + [at(base, 5 + 600)]))[0]  # ten minutes on: still there
+    st = play(tmp_path, snaps + [at(base, 5 + 601)])
+    assert line(st)[0] == "" and "BUY CE ready" in log_text(st) and st["title"] == "(1) Prism Market Data"  # off the line, still in the log (and the count)
+
+
+def test_the_state_alerts_are_not_repeated_on_the_line_as_events(tmp_path, base):
+    bad = readiness(base, False, "RECOVERING_GAPS", "recovering missing candles")
+    bad["health"]["readiness"]["ready"] = False
+    st = play(tmp_path, [base, at(bad, 5)])
+    text, html = line(st)
+    assert html.count('<div class="alert ') == 1 and "1 alert" in text and "NOT READY" in text and "Prism is NOT READY" in log_text(st)
+    assert 'id="alert-clear"' not in html  # nothing to clear on the line: the event is in the log, the state is the readiness line  # the readiness line is the state; the event is the sound and the log
+
+
+def test_the_worst_thing_colours_the_line(tmp_path, base):
+    bad = readiness(base, False, "FAILED", "login rejected")
+    ready = staged(base, "READY_TO_ACT")
+    snap = copy.deepcopy(ready)
+    snap["health"]["readiness"].update(ready=False, state="FAILED", summary="login rejected")
+    st = play(tmp_path, [staged(base, "CONFIRMED"), snap])
+    text, html = line(st)
+    assert 'class="alerts bad"' in html and "2 alerts" in text and html.count("<details") == 1  # the failure leads; the ready setup is listed with it
+    assert 'class="alerts warn"' in line(play(tmp_path, [base, at(staged(base, "INVALIDATED"), 5)]))[1]
+
+
+def test_clear_empties_the_line_and_the_log(tmp_path, base):
+    st = play(tmp_path, [staged(base, "CONFIRMED"), base], then=[{"op": "click", "id": "alert-clear"}])
+    assert line(st)[0] == "" and log_entries(st) == [] and st["title"] == "Prism Market Data"
+
+
 def test_the_log_keeps_the_last_five_and_the_count_goes_on(tmp_path, base):
     def many(stage):
         s = copy.deepcopy(base)
@@ -347,7 +404,9 @@ def test_the_log_keeps_the_last_five_and_the_count_goes_on(tmp_path, base):
         return s
 
     st = play(tmp_path, [many("CONFIRMED"), many("READY_TO_ACT")])  # eight setups become ready at once: eight alerts, one sound
-    assert log_text(st).count("BUY CE ready") == 5 and st["title"] == "(8) Prism Market Data" and st["fx"]["tones"] == SOUND["act"]
+    assert log_text(st).count("BUY CE ready") == 8 and st["title"] == "(8) Prism Market Data" and st["fx"]["tones"] == SOUND["act"]
+    text, html = line(st)
+    assert html.count('<div class="alert act">') == 5 and "5 alerts" in text  # the line lists the latest five of the eight
 
 
 def test_what_a_snapshot_says_is_escaped_in_the_log(tmp_path, base):
@@ -356,7 +415,7 @@ def test_what_a_snapshot_says_is_escaped_in_the_log(tmp_path, base):
     s2 = staged(base, "READY_TO_ACT", id=evil, strategy_name=evil)
     s1["trading"]["setups"][0]["id"] = evil
     st = play(tmp_path, [s1, s2])
-    html = st["els"]["alertlog"]["html"]
+    html = st["els"]["alerts"]["html"]  # (the one alert line: the setup that became ready is on it, escaped)
     assert "<img" not in html and "&lt;img" in html and st["errors"] == []
 
 

@@ -188,7 +188,7 @@ class TradeLog:
             rows.append({**r, "matched": m.get("matched", 0), "pnl": m.get("pnl") if r["side"] == "SELL" else None, "lot_pnl": m.get("pnl") if r["side"] == "BUY" else None, "followed": followed(r)})
         spelled = {r["id"]: r["instrument"] for r in trades}  # (the instrument as you typed it)
         open_ = [{"instrument": spelled[lots_[0][2]], "qty": sum(q for q, _, _ in lots_), "average_price": sum(q * p for q, p, _ in lots_) / sum(q for q, _, _ in lots_)} for lots_ in book["open"].values()]
-        lost = max(-book["realised"], 0.0)
+        lost = -book["realised"] if book["realised"] < 0 else 0.0  # (a plain 0.0: `max(-0.0, 0.0)` is -0.0, which a page would print as "-0")
         out = {"available": True, "file": self.path(now).name, "trades": rows, "voided": sorted(voided), "open": open_, "realised": book["realised"], "lost_today": lost,
                "limits": limits.as_dict() if limits is not None else None, "daily_loss_used_pct": None, "daily_loss_reached": False,
                "basis": "arithmetic on the prices you typed, long option trades, first in first out; no brokerage, tax or slippage; not an account statement"}  # fmt: skip

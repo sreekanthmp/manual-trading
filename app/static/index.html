@@ -15,13 +15,10 @@
   .stale { color:var(--bad); } .partial { color:var(--warn); }
   .num { text-align:right; font-variant-numeric:tabular-nums; }
 
-  /* alerts you are told about (a sound, a popup, and this log), as against the alert lines above that say what is wrong right now */
+  /* alerts you are told about (a sound, a popup; the setups that became ready or ended also join the one alert line below) */
   .alertmode { flex:none; background:none; border:1px solid var(--line); border-radius:99px; padding:2px 10px; color:var(--mut); font-size:11px; cursor:pointer; white-space:nowrap; }
   .alertmode:hover { color:var(--fg); } .alertmode.off { opacity:.6; }
-  #alertlog:empty { display:none; } #alertlog { margin-bottom:6px; }
-  .alertlog { position:relative; border:1px solid var(--acc); background:var(--panel2); border-radius:4px; padding:3px 56px 3px 10px; }
-  .alertlog .al { font-size:12px; padding:1px 0; } .alertlog .al.act { color:var(--ok); font-weight:600; } .alertlog .al.warn { color:var(--warn); } .alertlog .al.info { color:var(--mut); }
-  .alertlog .linkbtn { position:absolute; right:8px; top:3px; }
+  .alert.act { border-color:var(--ok); background:var(--okbg); color:var(--ok); font-weight:600; } details.alerts.act > summary { border-color:var(--ok); background:var(--okbg); color:var(--ok); font-weight:600; }
 
   /* the Trades tab */
   .tform { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:flex-end; }
@@ -198,7 +195,6 @@
 <main id="main">
   <div id="stale"></div>
   <div id="alerts"></div>
-  <div id="alertlog"></div>
   <div id="jserr"></div>
 
   <section class="tab" id="tab-overview" role="tabpanel" aria-labelledby="tb-overview">
@@ -463,12 +459,15 @@ function renderAlerts(h) {
   for (const w of h.issues || []) items.push({sev: "bad", head: "Data not trusted", text: `${w}. No BUY decision is possible until this is fixed.`});
   for (const w of h.warnings || []) items.push({sev: "warn", head: "", text: w});
   if (typeof T !== "undefined" && T.data && T.data.available && T.data.daily_loss_reached) items.push({sev: "bad", head: "Your daily loss limit is reached", text: `${rs(T.data.lost_today)} lost of ${rs(T.data.limits.max_daily_loss)}. Prism's decisions are unchanged: this limit is yours, and it says stop for the day`});
+  const events = recentAlerts();
+  for (const x of events) items.push({sev: x.level === "act" ? "act" : "warn", head: x.title, text: x.text});
   if (!items.length) { setHtml("alerts", ""); return; }
-  const worst = items.some(i => i.sev === "bad") ? "bad" : "warn", lead = items.find(i => i.sev === worst);
-  const icon = sev => sev === "bad" ? "⛔" : "⚠";
+  const RANK = {bad: 3, act: 2, warn: 1}, worst = items.reduce((w, i) => RANK[i.sev] > RANK[w] ? i.sev : w, "warn"), lead = items.find(i => i.sev === worst);
+  const icon = sev => sev === "bad" ? "⛔" : sev === "act" ? "🔔" : "⚠";
   setHtml("alerts", `<details class="alerts ${worst}" data-key="alerts"${OPEN.has("alerts") ? " open" : ""}><summary title="click for every alert">${icon(worst)} <b>${items.length} alert${items.length === 1 ? "" : "s"}</b>: ` +
     `${esc(lead.head || lead.text)}${items.length > 1 ? ` (+${items.length - 1} more)` : ""} <span class="mut">▾ details</span></summary>` +
-    `<div class="alertlist">${items.map(i => `<div class="alert ${i.sev}">${icon(i.sev)} ${i.head ? `<b>${esc(i.head)}</b>: ` : ""}${esc(i.text)}</div>`).join("")}</div></details>`);
+    `<div class="alertlist">${items.map(i => `<div class="alert ${i.sev}">${icon(i.sev)} ${i.head ? `<b>${esc(i.head)}</b>: ` : ""}${esc(i.text)}</div>`).join("")}` +
+    `${events.length ? `<button class="linkbtn" id="alert-clear" type="button">clear the setup alerts</button>` : ""}</div></details>`);
 }
 
 // the page-wide notice when the link is not live: the last snapshot is still shown (dimmed), for inspection only
@@ -1054,17 +1053,18 @@ function popup(c) {
 }
 function setTitle() { document.title = (UNSEEN ? `(${UNSEEN}) ` : "") + BASE_TITLE; }
 function markSeen() { if (UNSEEN) { UNSEEN = 0; setTitle(); } }
-function renderAlertLog() {
-  if (!ALERT_LOG.length) { setHtml("alertlog", ""); return; }
-  const icon = {act: "🔔", warn: "⚠", info: "ℹ"};
-  setHtml("alertlog", `<div class="alertlog">${ALERT_LOG.slice(0, 5).map(x => `<div class="al ${esc(x.level)}"><span class="mut">${fmtT(x.t)}</span> ${icon[x.level] || ""} <b>${esc(x.title)}</b> ${esc(x.text)}</div>`).join("")}` +
-    `<button class="linkbtn" id="alert-clear" type="button">clear</button></div>`);
+// What the one alert line shows of the events: the setups that became ready or ended in the last ten minutes (at most five). The readiness, the feed, the link and the loss limit are alert lines of
+// their own while they last, so they are not repeated here; every event stays in ALERT_LOG (the sound, the popup and the title count come from it).
+const ALERT_SHOW_S = 600;
+function recentAlerts() {
+  const at = LAST && LAST.server_time;
+  return ALERT_LOG.filter(x => /^(ready|ended):/.test(x.key || "") && at != null && x.t != null && at - x.t <= ALERT_SHOW_S).slice(0, 5);
 }
 function raiseAlerts(list, snap) {
   if (!list.length) return;
-  for (const c of list) ALERT_LOG.unshift({t: snap && snap.server_time, level: c.level, title: c.title, text: c.text});
+  for (const c of list) ALERT_LOG.unshift({t: snap && snap.server_time, level: c.level, key: c.key, title: c.title, text: c.text});
   ALERT_LOG.length = Math.min(ALERT_LOG.length, 20);
-  UNSEEN += list.length; setTitle(); renderAlertLog();
+  UNSEEN += list.length; setTitle();
   if (ALERT_MODE === "off") return;  // the log and the title still say it; only the sound and the popup are off
   const top = list.some(c => c.level === "act") ? "act" : list.some(c => c.level === "warn") ? "warn" : "info";
   if (top !== "info") beep(top);  // one sound per snapshot, however many things changed in it
@@ -1148,7 +1148,7 @@ async function logTrade() {
     const r = await sendJson("POST", "/api/trades", tradePayload());
     if (!r.ok) { tradeMsg(r.status === 404 ? "this Prism server has no trade log yet (restart Prism to load the current version)" : "not logged: " + detailText(r.body), true); return; }
     T.data = r.body.summary;
-    for (const id of ["t-qty", "t-price", "t-note"]) if ($(id)) $(id).value = "";
+    for (const id of ["t-qty", "t-price", "t-note", "t-setup"]) if ($(id)) $(id).value = "";  // (the setup belongs to that one trade: the next, a sell for one, is not tagged with it)
     tradeMsg("logged");
     drawTrades(); noteLimit();
     if (LAST) guard("alerts-line", () => renderAlerts(LAST.health || {issues: [], warnings: []}));
@@ -1210,7 +1210,7 @@ function showTab(name) {
 }
 document.addEventListener("click", e => {
   if (e.target.id === "alert-mode") { cycleAlertMode(); return; }
-  if (e.target.id === "alert-clear") { ALERT_LOG.length = 0; markSeen(); renderAlertLog(); return; }
+  if (e.target.id === "alert-clear") { ALERT_LOG.length = 0; markSeen(); if (LAST) guard("alerts-line", () => renderAlerts(LAST.health || {issues: [], warnings: []})); return; }
   if (e.target.id === "t-log") { logTrade(); return; }
   if (e.target.id === "t-refresh") { T.error = null; loadTrades(); return; }
   if (e.target.id === "t-calc") { calcRisk(); return; }

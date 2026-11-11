@@ -10,6 +10,7 @@ A notebook of your own trades and a size calculator. Nothing here places an orde
   * everything the server says is escaped"""
 
 import copy
+import json
 
 import pytest
 from dashboard_harness import base_snapshot, run_page, words
@@ -40,7 +41,13 @@ def ok(body):
 def go(tmp_path, snap, steps, fetch=None, extra_env=None):
     """The page after those steps (the last capture). `fetch`: the fake server's routes."""
     env = {"op": "env", "fetch": fetch or {}, **(extra_env or {})}
-    return run_page(tmp_path, [env, {"op": "message", "snap": snap}, *steps, {"op": "capture", "label": "end"}])[-1]
+    probe = {"op": "eval", "code": "document.getElementById('alertprobe').textContent = JSON.stringify(ALERT_LOG)"}
+    return run_page(tmp_path, [env, {"op": "message", "snap": snap}, *steps, probe, {"op": "capture", "label": "end"}])[-1]
+
+
+def alert_log(state):
+    """The alert events the page raised (its ALERT_LOG), newest first, as one string."""
+    return " ".join(f"{x['title']} {x['text']}" for x in json.loads(state["els"]["alertprobe"]["text"]))
 
 
 def requests(state, method=None, prefix=""):
@@ -127,10 +134,10 @@ def test_logging_sends_what_was_typed_applies_the_answer_clears_the_numbers_and_
     assert post["body"] == {"instrument": "NIFTY 24500 CE", "side": "BUY", "qty": "65", "price": "101.5", "setup_id": "trend_pullback:bull:1", "note": "first"}
     assert st["els"]["t-msg"]["text"] == "logged" and st["els"]["t-msg"]["cls"] == ""
     assert "Open NIFTY 24500 CE 65 @ 101.50" in body(st)
-    probe = run_page(tmp_path, [{"op": "env", "fetch": fetch}, {"op": "message", "snap": base}, TAB, typed(instr="NIFTY 24500 CE", qty="65", price="101.5", note="first"), {"op": "click", "id": "t-log"},
-                                {"op": "eval", "code": "document.getElementById('probe').textContent = [$('t-instr').value, $('t-qty').value, $('t-price').value, $('t-note').value].join('|')"},
+    probe = run_page(tmp_path, [{"op": "env", "fetch": fetch}, {"op": "message", "snap": base}, TAB, typed(instr="NIFTY 24500 CE", qty="65", price="101.5", note="first", setup="x:bull:1"), {"op": "click", "id": "t-log"},
+                                {"op": "eval", "code": "document.getElementById('probe').textContent = [$('t-instr').value, $('t-qty').value, $('t-price').value, $('t-note').value, $('t-setup').value].join('|')"},
                                 {"op": "capture", "label": "p"}])[-1]
-    assert probe["els"]["probe"]["text"] == "NIFTY 24500 CE|||"  # the instrument stays for the next one; the numbers and the note do not
+    assert probe["els"]["probe"]["text"] == "NIFTY 24500 CE||||"  # the instrument stays for the next one; the numbers, the note and the setup (which belongs to that one trade) do not
 
 
 def test_a_refused_trade_says_why_in_red_and_changes_nothing(tmp_path, base):
@@ -210,11 +217,11 @@ def test_logging_the_trade_that_reaches_the_limit_raises_one_warning_and_not_a_s
     under = summary([trade()], realised=-4000.0, lost=4000.0)
     fetch = {"GET /api/trades": ok(under), "POST /api/trades": [ok({"ok": True, "trade": trade("t2-1"), "summary": LOST}), ok({"ok": True, "trade": trade("t3-1"), "summary": LOST})]}
     one = go(tmp_path, base, [TAB, typed(instr="x", qty="1", price="1"), {"op": "click", "id": "t-log"}], fetch)
-    log = words(one["els"]["alertlog"]["html"])
+    log = alert_log(one)
     assert "Your daily loss limit is reached" in log and "Rs 5,200 lost of Rs 5,000" in log and one["fx"]["tones"] == [520, 390]
     fetch["POST /api/trades"] = [ok({"ok": True, "trade": trade("t2-1"), "summary": LOST}), ok({"ok": True, "trade": trade("t3-1"), "summary": LOST})]
     two = go(tmp_path, base, [TAB, typed(instr="x", qty="1", price="1"), {"op": "click", "id": "t-log"}, typed(instr="x", qty="1", price="1"), {"op": "click", "id": "t-log"}], {**fetch})
-    assert two["fx"]["tones"] == [520, 390] and words(two["els"]["alertlog"]["html"]).count("Your daily loss limit is reached") == 1  # still reached: not said again
+    assert two["fx"]["tones"] == [520, 390] and alert_log(two).count("Your daily loss limit is reached") == 1  # still reached: not said again
 
 
 def test_a_loss_limit_that_is_left_and_reached_again_is_said_again(tmp_path, base):
@@ -222,13 +229,13 @@ def test_a_loss_limit_that_is_left_and_reached_again_is_said_again(tmp_path, bas
     fetch = {"GET /api/trades": ok(summary()), "POST /api/trades": [ok({"ok": True, "trade": trade(), "summary": LOST}), ok({"ok": True, "trade": trade(), "summary": back}), ok({"ok": True, "trade": trade(), "summary": LOST})]}
     fill = [typed(instr="x", qty="1", price="1"), {"op": "click", "id": "t-log"}]
     st = go(tmp_path, base, [TAB, *fill, *fill, *fill], fetch)
-    assert words(st["els"]["alertlog"]["html"]).count("Your daily loss limit is reached") == 2 and st["fx"]["tones"] == [520, 390, 520, 390]
+    assert alert_log(st).count("Your daily loss limit is reached") == 2 and st["fx"]["tones"] == [520, 390, 520, 390]
 
 
 def test_a_limit_that_is_not_reached_raises_nothing(tmp_path, base):
     st = go(tmp_path, base, [TAB, typed(instr="x", qty="1", price="1"), {"op": "click", "id": "t-log"}],
             {"GET /api/trades": ok(summary()), "POST /api/trades": ok({"ok": True, "trade": trade(), "summary": summary([trade()], realised=-1000.0, lost=1000.0)})})
-    assert st["els"].get("alertlog", {"html": ""})["html"] == "" and st["fx"]["tones"] == [] and st["els"].get("alerts", {"html": ""})["html"] == ""
+    assert alert_log(st) == "" and st["fx"]["tones"] == [] and st["els"].get("alerts", {"html": ""})["html"] == ""
 
 
 # -- the calculator --------------------------------------------------------------------------------------------------------------------------

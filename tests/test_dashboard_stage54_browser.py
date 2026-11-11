@@ -131,7 +131,7 @@ def test_every_state_on_every_tab_is_within_the_screen_readable_and_free_of_erro
     assert page.errors == [], page.errors
 
 
-def test_the_four_tabs_open_by_click_by_keyboard_and_by_address(page, served):
+def test_the_five_tabs_open_by_click_by_keyboard_and_by_address(page, served):  # (four until Stage 8 added Trades)
     open_overview(page, served, 1366, 768)
     visible = "[...document.querySelectorAll('section.tab')].filter(s => !s.hidden).map(s => s.id)"
     selected = "[...document.querySelectorAll('#tabs button')].filter(b => b.getAttribute('aria-selected') === 'true').map(b => b.dataset.tab)"
@@ -142,7 +142,7 @@ def test_the_four_tabs_open_by_click_by_keyboard_and_by_address(page, served):
         assert page.js(visible) == [f"tab-{tab}"] and page.js(selected) == [tab] and page.js("location.hash") == f"#{tab}"
     page.js("document.getElementById('tb-overview').click()")
     page.js("document.getElementById('tb-overview').focus()")
-    for key, want in (("ArrowRight", "options"), ("ArrowRight", "analysis"), ("ArrowRight", "journal"), ("ArrowRight", "overview"), ("ArrowLeft", "journal"), ("ArrowLeft", "analysis")):  # by keyboard, wrapping round
+    for key, want in (("ArrowRight", "options"), ("ArrowRight", "analysis"), ("ArrowRight", "journal"), ("ArrowRight", "trades"), ("ArrowRight", "overview"), ("ArrowLeft", "trades"), ("ArrowLeft", "journal")):  # by keyboard, wrapping round
         page.call("Input.dispatchKeyEvent", type="keyDown", key=key, code=key, windowsVirtualKeyCode=39 if key == "ArrowRight" else 37)
         page.call("Input.dispatchKeyEvent", type="keyUp", key=key, code=key, windowsVirtualKeyCode=39 if key == "ArrowRight" else 37)
         page.until(f"TAB === '{want}'", timeout=5)

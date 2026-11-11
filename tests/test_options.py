@@ -620,8 +620,12 @@ def test_no_order_placement_exists_in_the_application():
     from app.main import create_app
 
     app = create_app(md=MarketData(CFG, Clock(ist(10, 0))), feed=None)
-    methods = {m for r in app.routes for m in (getattr(r, "methods", None) or set())}
-    assert methods <= {"GET", "HEAD"}  # no route accepts a POST, PUT, PATCH or DELETE: nothing can be sent to the application, let alone to a broker
+    writes = {(m, r.path) for r in app.routes for m in (getattr(r, "methods", None) or set()) if m not in ("GET", "HEAD")}
+    # Stage 8: the ONLY routes that accept anything are the two that write your own trade notebook (a trade you made yourself, and the void of one): no PUT, PATCH or DELETE, no other POST, and nothing that reaches the broker
+    assert writes == {("POST", "/api/trades"), ("POST", "/api/trades/{trade_id}/void")}
+    for name in ("trades.py", "risk.py"):  # ... and the notebook and the calculator cannot reach the broker, the session or the network
+        src = (ROOT / "app" / name).read_text(encoding="utf-8")
+        assert not re.search(r"^\s*(import|from)\s+(requests|socket|SmartApi|urllib|http|\.auth|\.feed|\.gaps|\.history)", src, re.M), name
 
 
 def test_analysing_and_selecting_never_touches_the_broker_session():
