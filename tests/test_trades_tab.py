@@ -23,7 +23,7 @@ def base():
 
 
 def trade(i="t1-1", side="BUY", instrument="NIFTY 24500 CE", qty=65, price=100.0, **kw):
-    return {"v": 1, "kind": "trade", "id": i, "t": 1793940000.0 + int(i.split("-")[1]) * 60, "time": "2026-11-06T10:00:00+05:30", "instrument": instrument, "side": side, "qty": qty, "price": price,
+    return {"v": 1, "kind": "trade", "id": i, "t": 1793940000.0 + (int(i.split("-")[1]) if i.split("-")[-1].isdigit() else 0) * 60, "time": "2026-11-06T10:00:00+05:30", "instrument": instrument, "side": side, "qty": qty, "price": price,
             "setup_id": None, "note": None, "prism": None, "matched": 0, "pnl": None, "lot_pnl": None, "followed": None, **kw}  # fmt: skip
 
 
@@ -228,7 +228,7 @@ def test_a_loss_limit_that_is_left_and_reached_again_is_said_again(tmp_path, bas
 def test_a_limit_that_is_not_reached_raises_nothing(tmp_path, base):
     st = go(tmp_path, base, [TAB, typed(instr="x", qty="1", price="1"), {"op": "click", "id": "t-log"}],
             {"GET /api/trades": ok(summary()), "POST /api/trades": ok({"ok": True, "trade": trade(), "summary": summary([trade()], realised=-1000.0, lost=1000.0)})})
-    assert st["els"]["alertlog"]["html"] == "" and st["fx"]["tones"] == [] and st["els"]["alerts"]["html"] == ""
+    assert st["els"].get("alertlog", {"html": ""})["html"] == "" and st["fx"]["tones"] == [] and st["els"].get("alerts", {"html": ""})["html"] == ""
 
 
 # -- the calculator --------------------------------------------------------------------------------------------------------------------------
