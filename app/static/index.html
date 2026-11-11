@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prism Market Data</title>
+<style>
+  :root { color-scheme: dark; --bg:#0d1014; --panel:#14181e; --panel2:#1a2028; --line:#272f3a; --fg:#d9dee5; --mut:#8b95a4; --ok:#3ddc84; --bad:#ff6b6b; --warn:#f5b942; --acc:#5aa9ff;
+          --okbg:#10281b; --badbg:#2d1517; --warnbg:#2b2210; --neubg:#1a1f26; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--fg); font:13px/1.35 system-ui, "Segoe UI", sans-serif; }
+  button { font:inherit; color:inherit; }
+  b { font-weight:600; }
+  .up { color:var(--ok); } .down { color:var(--bad); } .flat { color:var(--warn); } .neu { color:var(--mut); } .mut { color:var(--mut); } .err { color:var(--bad); }
+  .stale { color:var(--bad); } .partial { color:var(--warn); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* alerts you are told about (a sound, a popup, and this log), as against the alert lines above that say what is wrong right now */
+  .alertmode { flex:none; background:none; border:1px solid var(--line); border-radius:99px; padding:2px 10px; color:var(--mut); font-size:11px; cursor:pointer; white-space:nowrap; }
+  .alertmode:hover { color:var(--fg); } .alertmode.off { opacity:.6; }
+  #alertlog:empty { display:none; } #alertlog { margin-bottom:6px; }
+  .alertlog { position:relative; border:1px solid var(--acc); background:var(--panel2); border-radius:4px; padding:3px 56px 3px 10px; }
+  .alertlog .al { font-size:12px; padding:1px 0; } .alertlog .al.act { color:var(--ok); font-weight:600; } .alertlog .al.warn { color:var(--warn); } .alertlog .al.info { color:var(--mut); }
+  .alertlog .linkbtn { position:absolute; right:8px; top:3px; }
+
+  /* the Trades tab */
+  .tform { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:flex-end; }
+  .tform label { display:flex; flex-direction:column; gap:2px; font-size:11px; color:var(--mut); }
+  .tform input, .tform select { background:var(--panel2); color:var(--fg); border:1px solid var(--line); border-radius:3px; padding:3px 6px; font:inherit; width:112px; }
+  .tform input.wide { width:190px; } .tform input:focus, .tform select:focus { outline:1px solid var(--acc); }
+  .tform button { background:var(--panel2); border:1px solid var(--acc); border-radius:3px; padding:4px 12px; cursor:pointer; font-weight:600; } .tform button:hover { background:var(--acc); color:#0d1014; }
+  #t-msg { font-size:12px; margin-top:4px; min-height:16px; } #t-msg.err { color:var(--bad); }
+  .tstat { display:flex; flex-wrap:wrap; gap:4px 18px; margin-bottom:6px; } .tstat b { font-variant-numeric:tabular-nums; }
+  .voidbtn { background:none; border:1px solid var(--line); border-radius:3px; color:var(--mut); font-size:11px; cursor:pointer; padding:0 6px; } .voidbtn:hover { color:var(--bad); border-color:var(--bad); }
+
+  /* header and navigation: sticky, about 56 px + 32 px */
+  #top { position:sticky; top:0; z-index:30; height:56px; display:flex; align-items:center; gap:14px; padding:0 12px; background:#10141a; border-bottom:1px solid var(--line); }
+  .brand { font-weight:800; letter-spacing:.12em; font-size:15px; white-space:nowrap; flex:none; } .brand small { display:block; font-weight:500; letter-spacing:.04em; font-size:10px; color:var(--mut); }
+  .spotbox { display:flex; flex-direction:column; line-height:1.1; min-width:150px; }
+  .spot { font-size:26px; font-weight:700; font-variant-numeric:tabular-nums; } #spot-age { font-size:11px; color:var(--mut); max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .chip { padding:2px 9px; border-radius:99px; border:1px solid currentColor; font-size:11px; font-weight:700; letter-spacing:.03em; white-space:nowrap; }
+  .chip.ok { color:var(--ok); } .chip.bad { color:var(--bad); } .chip.warn { color:var(--warn); } .chip.neu { color:var(--mut); }
+  #hsum { font-size:11.5px; color:var(--mut); flex:1; min-width:0; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #clock { font-size:11.5px; color:var(--mut); white-space:nowrap; }
+  #tabs { position:sticky; top:56px; z-index:29; height:32px; display:flex; gap:2px; padding:0 8px; background:#10141a; border-bottom:1px solid var(--line); }
+  #tabs button { background:none; border:0; border-bottom:2px solid transparent; padding:0 16px; color:var(--mut); cursor:pointer; font-weight:600; letter-spacing:.02em; }
+  #tabs button:hover { color:var(--fg); } #tabs button[aria-selected="true"] { color:var(--fg); border-bottom-color:var(--acc); }
+  #tabs button:focus-visible { outline:1px solid var(--acc); outline-offset:-2px; }
+  main { padding:8px 12px 14px; }
+  .tab[hidden] { display:none; }
+
+  /* alerts: only present when something is wrong */
+  #alerts:empty { display:none; } #alerts { margin-bottom:6px; }
+  .alert { border:1px solid var(--warn); background:var(--warnbg); color:var(--warn); border-radius:4px; padding:3px 10px; margin-bottom:3px; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .alert.bad { border-color:var(--bad); background:var(--badbg); color:var(--bad); font-weight:600; }
+  .warnbox { border:1px solid var(--warn); background:var(--warnbg); color:var(--warn); border-radius:4px; padding:4px 10px; margin:0 0 6px; }
+  .badbox { border:1px solid var(--bad); background:var(--badbg); color:var(--bad); border-radius:4px; padding:4px 10px; margin:0 0 6px; font-weight:600; }
+
+  /* panels */
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:6px 10px 8px; }
+  .panel h3 { margin:0 0 5px; font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mut); display:flex; justify-content:space-between; align-items:baseline; }
+  .panel h3 a, .linkbtn { color:var(--acc); background:none; border:0; cursor:pointer; font-size:11px; text-transform:none; letter-spacing:0; padding:0; }
+  .cols { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px; margin-top:6px; align-items:start; }
+  .col { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .kv { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:5px 10px; }
+  .kv > div { min-width:0; } .kv > div > span { display:block; font-size:10.5px; color:var(--mut); text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
+  .kv b { display:block; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .kv b span { display:inline; font-size:inherit; color:inherit; text-transform:none; letter-spacing:0; }
+  .kv.two { grid-template-columns:repeat(2, minmax(0,1fr)); } .kv.four { grid-template-columns:repeat(4, minmax(0,1fr)); } .kv.six { grid-template-columns:repeat(6, minmax(0,1fr)); }
+  .kv .wide { grid-column:1 / -1; } .kv .wide b { white-space:normal; font-weight:500; }
+
+  /* decision panel: the most prominent block */
+  .decision { display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px 14px; align-items:center; padding:8px 12px; border-radius:6px; border:1px solid var(--line); border-left-width:5px; background:var(--neubg); position:relative; }
+  .decision.buy-ce { border-color:var(--ok); background:var(--okbg); } .decision.buy-pe { border-color:var(--bad); background:var(--badbg); }
+  .decision.wait { border-color:var(--warn); background:var(--warnbg); } .decision.no-trade { border-color:#4a5463; background:var(--neubg); }
+  .dbadge { min-width:128px; } .dtxt { font-size:26px; font-weight:800; line-height:1.05; letter-spacing:.02em; }
+  .buy-ce .dtxt { color:var(--ok); } .buy-pe .dtxt { color:var(--bad); } .wait .dtxt { color:var(--warn); } .no-trade .dtxt { color:#c3cad4; }
+  .dsub { font-size:11px; color:var(--mut); margin-top:2px; }
+  .dhead { font-size:15px; font-weight:600; line-height:1.25; } .dblock { font-size:12px; color:var(--warn); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dmetrics { display:grid; grid-template-columns:repeat(5, auto); gap:2px 18px; text-align:left; }
+  .dmetrics span { display:block; font-size:10px; color:var(--mut); text-transform:uppercase; letter-spacing:.04em; } .dmetrics b { font-size:13px; white-space:nowrap; }
+  details.pop { position:static; } details.pop > summary { list-style:none; cursor:pointer; color:var(--acc); font-size:11.5px; user-select:none; white-space:nowrap; }
+  details.pop > summary::-webkit-details-marker { display:none; }
+  details.more > summary { list-style:none; cursor:pointer; color:var(--acc); font-size:11.5px; padding:3px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; user-select:none; }
+  details.more > summary::-webkit-details-marker { display:none; } details.more[open] > summary { padding-bottom:3px; }
+  details.pop > .popbody { position:absolute; left:0; right:0; top:100%; z-index:25; margin-top:4px; max-height:62vh; overflow:auto; padding:10px 14px; background:var(--panel2);
+                           border:1px solid var(--line); border-radius:6px; box-shadow:0 10px 30px #000c; }
+  .dexp { grid-column:1 / -1; display:flex; justify-content:space-between; gap:10px; margin-top:-2px; font-size:11px; color:var(--mut); }
+
+  /* timeframe row */
+  .tfrow { display:grid; grid-template-columns:auto auto minmax(0,1fr); gap:6px; margin-top:6px; }
+  .tfgrp { display:flex; align-items:stretch; gap:1px; border:1px solid var(--line); border-radius:6px; background:var(--panel); overflow:hidden; }
+  .tfgrp.gate { border-color:#3a4a60; } .tfcap { writing-mode:horizontal-tb; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--mut); padding:4px 8px; display:flex; align-items:center; max-width:92px; line-height:1.15; background:#10141a; }
+  .tfgrp.gate .tfcap { color:var(--acc); }
+  .tf { padding:4px 12px; min-width:112px; } .tf .tfl { font-weight:800; font-size:11px; letter-spacing:.05em; color:var(--mut); margin-right:6px; } .tf b { font-size:13px; } .tf small { display:block; color:var(--mut); font-size:10.5px; }
+  .tfgrp.info .tf { opacity:.82; }
+  .tfal { border:1px solid var(--line); border-radius:6px; background:var(--panel); padding:4px 10px; min-width:0; display:flex; flex-direction:column; justify-content:center; }
+  .tfal b { font-size:13px; } .tfal small { color:var(--mut); font-size:10.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  /* compact lists */
+  .strat { width:100%; border-collapse:collapse; } .strat td { padding:2px 4px; border-top:1px solid var(--line); vertical-align:baseline; } .strat tr:first-child td { border-top:0; }
+  .strat td.why { color:var(--mut); max-width:0; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pillst { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border:1px solid currentColor; border-radius:3px; white-space:nowrap; }
+  .howto { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px 24px; } .howto > div { line-height:1.4; }
+  @media (max-width:900px) { .howto { grid-template-columns:minmax(0,1fr); } }
+  /* recent events: one aligned row per event across the full width; a long description is summarised and its full text opens on request */
+  .evrow { display:grid; grid-template-columns:44px 26px 150px 168px minmax(0,1fr); gap:0 12px; align-items:baseline; padding:2px 0; }
+  details.evd > summary { list-style:none; cursor:pointer; } details.evd > summary::-webkit-details-marker { display:none; }
+  .evmore { color:var(--acc); font-size:11px; white-space:nowrap; } details.evd[open] .evmore { display:none; }
+  .evfull { margin:0 0 3px 244px; padding:3px 8px; color:var(--fg); background:var(--panel2); border-left:2px solid var(--line); }
+  .st { font-weight:700; } .st-CONFIRMED,.st-READY_TO_ACT { color:var(--ok); } .st-INVALIDATED { color:var(--bad); } .st-EXPIRED,.st-MISSED { color:var(--mut); }
+  .st-BLOCKED,.st-WAITING_FOR_CONFIRMATION { color:var(--warn); } .st-DETECTED { color:var(--acc); }
+
+  /* sections and tables */
+  details.sec { background:var(--panel); border:1px solid var(--line); border-radius:6px; margin-bottom:6px; }
+  details.sec > summary { cursor:pointer; padding:6px 10px; font-weight:600; user-select:none; } details.sec > summary .mut { font-weight:400; font-size:12px; margin-left:6px; }
+  details.sec[open] > summary { border-bottom:1px solid var(--line); } .secbody { padding:8px 10px; }
+  .scroll { overflow-x:auto; max-width:100%; }
+  table.t { border-collapse:collapse; width:100%; font-variant-numeric:tabular-nums; }
+  table.t th, table.t td { text-align:right; padding:3px 8px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  table.t th:first-child, table.t td:first-child { text-align:left; } table.t th { color:var(--mut); font-weight:500; font-size:11.5px; position:sticky; top:0; }
+  table.t td.wrap, table.t th.wrap { white-space:normal; text-align:left; } table.t td.l, table.t th.l { text-align:left; }
+  tr.opt-avoid td { color:var(--mut); } tr.opt-sel td { background:var(--panel2); font-weight:700; }
+  .card { border:1px solid var(--line); background:var(--panel2); border-radius:6px; padding:6px 10px; margin:0 0 6px; }
+  .card.ce { border-left:4px solid var(--ok); } .card.pe { border-left:4px solid var(--bad); } .card .why { margin:1px 0 1px 12px; }
+  .sev-avoid { color:var(--bad); } .sev-warn { color:var(--warn); }
+  .lv div { margin:2px 0; }
+  .selhead { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; margin-bottom:6px; } .selhead .big { font-size:18px; font-weight:800; }
+  .fresh-strip { margin-top:6px; padding:4px 8px; border:1px solid var(--line); border-radius:4px; background:var(--panel); }
+  .bar { display:flex; flex-wrap:wrap; gap:4px 16px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:5px 10px; margin-bottom:6px; }
+  #jserr:empty { display:none; } #jserr { color:var(--bad); font-size:12px; padding:4px 12px; }
+
+  /* Stage 5.1: the link state (loading / live / stale), the one-line alert summary, the decision's identity strip, the regime cells and the strategy monitor */
+  .spotline { display:flex; align-items:baseline; gap:8px; } #spot-chg { font-size:12px; font-weight:600; white-space:nowrap; } .spot.dim { opacity:.45; } #spot-age { max-width:470px; }
+  #stale:empty { display:none; } #stale { margin-bottom:6px; }
+  .stalebar { border:1px solid var(--bad); background:var(--badbg); color:var(--bad); border-radius:4px; padding:4px 10px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .stalebar span { font-weight:500; color:var(--fg); }
+  main.staled .tab { opacity:.5; filter:grayscale(.7); }  /* the last snapshot stays readable, and plainly is not current */
+  .decision.stale { border-color:var(--bad); background:var(--neubg); } .decision.stale .dtxt { color:var(--mut); } .decision.stale .dhead { color:var(--bad); }
+  .decision.loading { border-color:var(--line); background:var(--neubg); display:block; text-align:center; color:var(--mut); padding:14px; font-size:15px; }
+  #alerts { position:relative; }
+  details.alerts > summary { list-style:none; cursor:pointer; padding:3px 10px; border:1px solid var(--warn); border-radius:4px; background:var(--warnbg); color:var(--warn); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; user-select:none; font-size:12px; }
+  details.alerts.bad > summary { border-color:var(--bad); background:var(--badbg); color:var(--bad); font-weight:600; } details.alerts > summary::-webkit-details-marker { display:none; }
+  details.alerts > .alertlist { position:absolute; left:0; right:0; top:100%; z-index:28; margin-top:2px; max-height:60vh; overflow:auto; padding:6px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; box-shadow:0 10px 30px #000c; }
+  .alertlist .alert { white-space:normal; overflow:visible; }
+  .did { display:flex; flex-wrap:wrap; gap:1px 16px; align-items:baseline; min-width:0; } .did .k { text-transform:uppercase; letter-spacing:.04em; font-size:10px; margin-right:4px; } .did b { font-size:12px; color:var(--fg); }
+  .did code { font:11.5px ui-monospace, Consolas, monospace; color:var(--fg); display:inline-block; max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom; }
+  .dexp .go { display:flex; gap:14px; white-space:nowrap; align-items:baseline; }
+  .rg { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:4px 8px; margin-top:3px; }
+  .rgc { min-width:0; border-left:2px solid var(--line); padding-left:6px; } .rgc span { display:block; font-size:10px; color:var(--mut); text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rgc b { display:block; font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .rgc small { display:block; font-size:10px; color:var(--mut); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rgc.up { border-left-color:var(--ok); } .rgc.up b { color:var(--ok); } .rgc.down { border-left-color:var(--bad); } .rgc.down b { color:var(--bad); } .rgc.flat { border-left-color:var(--warn); } .rgc.flat b { color:var(--warn); }
+  .rgc.mut b { color:var(--mut); font-weight:500; } .rgc.unk { border-left:2px dashed var(--warn); } .rgc.unk b { color:var(--warn); }
+  .kv .span2 { grid-column:span 2; } .kv .span2 b { white-space:nowrap; } .kv .span2 b b, .kv .span2 b span { display:inline; }
+  .rgnote { font-size:11px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:400; } .rgnote b, .kv .wide b b, .kv .wide b span { display:inline; }
+  .strat td.dir { font-weight:800; } .strat td.go { width:1%; white-space:nowrap; text-align:right; }
+  .conf { font-size:11.5px; color:var(--warn); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  details.sd { border:1px solid var(--line); border-radius:5px; margin-bottom:4px; background:var(--panel2); } details.sd > summary { cursor:pointer; padding:4px 8px; list-style:none; display:flex; gap:10px; align-items:baseline; user-select:none; }
+  details.sd > summary::-webkit-details-marker { display:none; } details.sd > summary .nm { font-weight:700; min-width:230px; } details.sd > summary .sn { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--mut); font-size:12px; }
+  details.sd[open] > summary { border-bottom:1px solid var(--line); } .sdbody { padding:6px 10px 8px; } .sdbody .side { border-left:3px solid var(--line); padding:2px 0 2px 8px; margin:4px 0; } .sdbody .side.ce { border-left-color:var(--ok); } .sdbody .side.pe { border-left-color:var(--bad); }
+  .origin { margin:2px 0 6px; font-size:12px; color:var(--mut); } .origin b, .origin code { color:var(--fg); } .origin code { font:11.5px ui-monospace, Consolas, monospace; }
+  #opt-info { color:var(--warn); font-weight:600; }
+  .loadbox { color:var(--mut); } details.sd, details.sec { scroll-margin-top:96px; }
+
+  /* large screens: the same layout, scaled up so the room is used for larger, easier-to-read text instead of empty space */
+  @media (min-width:1500px) and (min-height:800px) { body { zoom:1.1; } }
+  @media (min-width:1700px) and (min-height:940px) { body { zoom:1.3; } }
+  /* laptop and smaller */
+  @media (max-width:1200px) { .dmetrics { grid-template-columns:repeat(3, auto); } .kv.six { grid-template-columns:repeat(3, minmax(0,1fr)); } #hsum { display:none; } }
+  @media (max-width:900px) {
+    #top { height:auto; min-height:56px; flex-wrap:wrap; padding:6px 10px; gap:6px 12px; } #tabs { top:var(--topH, 92px); overflow-x:auto; }
+    .cols { grid-template-columns:minmax(0,1fr); } .decision { grid-template-columns:minmax(0,1fr); gap:6px; } .dmetrics { grid-template-columns:repeat(3, auto); }
+    .tfrow { grid-template-columns:minmax(0,1fr); } .tfgrp { flex-wrap:wrap; } .kv { grid-template-columns:repeat(2, minmax(0,1fr)); } .kv.four, .kv.six { grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .brand small { display:none; } #clock { display:none; } .spot { font-size:22px; } #spot-age { max-width:70vw; }
+    .alert { white-space:normal; } .kv b, .dblock, .tfal small, .strat td.why { white-space:normal; }
+    .evrow { display:flex; flex-wrap:wrap; gap:0 8px; } .evrow > :last-child { flex-basis:100%; } .evfull { margin-left:0; }
+  }
+  @media (max-width:520px) { .dmetrics { grid-template-columns:repeat(2, auto); } .tf { min-width:0; flex:1; padding:4px 8px; } .tfcap { max-width:none; } #tabs button { padding:0 11px; } }
+</style>
+</head>
+<body>
+<header id="top">
+  <div class="brand">PRISM<small>NIFTY terminal</small></div>
+  <div class="spotbox"><div class="spotline"><span class="spot" id="spot">–</span><span id="spot-chg"></span></div><span id="spot-age"></span></div>
+  <div class="chips"><span class="chip neu" id="c-market">CONNECTING</span><span class="chip neu" id="c-feed">FEED …</span><span class="chip neu" id="c-data">DATA …</span><span class="chip neu" id="c-ready">WAITING</span><span class="chip bad" id="c-link" hidden>DASHBOARD LINK LOST: reconnecting</span></div>
+  <div id="hsum"></div>
+  <button class="alertmode" id="alert-mode" type="button"></button>
+  <div id="clock"></div>
+</header>
+<nav id="tabs" role="tablist" aria-label="Prism sections">
+  <button role="tab" id="tb-overview" data-tab="overview" aria-selected="true" aria-controls="tab-overview">Overview</button>
+  <button role="tab" id="tb-options" data-tab="options" aria-selected="false" aria-controls="tab-options">Options</button>
+  <button role="tab" id="tb-analysis" data-tab="analysis" aria-selected="false" aria-controls="tab-analysis">Analysis</button>
+  <button role="tab" id="tb-journal" data-tab="journal" aria-selected="false" aria-controls="tab-journal">Journal</button>
+  <button role="tab" id="tb-trades" data-tab="trades" aria-selected="false" aria-controls="tab-trades">Trades</button>
+</nav>
+<main id="main">
+  <div id="stale"></div>
+  <div id="alerts"></div>
+  <div id="alertlog"></div>
+  <div id="jserr"></div>
+
+  <section class="tab" id="tab-overview" role="tabpanel" aria-labelledby="tb-overview">
+    <div class="decision no-trade" id="decision">–</div>
+    <div class="tfrow" id="tfrow"></div>
+    <div class="cols">
+      <div class="col">
+        <div class="panel"><h3>Market context</h3><div class="kv" id="ctx"></div></div>
+        <div class="panel"><h3 id="setup-h">Current setup</h3><div class="kv" id="setup"></div></div>
+      </div>
+      <div class="col">
+        <div class="panel"><h3>Strategy monitor <button class="linkbtn" data-goto="analysis" data-strategy="">All ten strategies →</button></h3><div id="strat"></div></div>
+        <div class="panel"><h3>Market regime</h3><div class="kv" id="rg"></div></div>
+        <div class="panel"><h3>Data health</h3><div class="kv" id="dhs"></div></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:6px"><h3>Recent events <button class="linkbtn" data-goto="journal">Full journal →</button></h3><div id="ev3"></div></div>
+    <details class="sec" id="howto" style="margin:6px 0 0">
+      <summary>How to use this page <span class="mut">before a manual trade: read top to bottom, it takes a few seconds</span></summary>
+      <div class="secbody howto">
+        <div><b>1. Is the data safe?</b> The header must say <b class="up">MARKET OPEN</b>, <b class="up">FEED CONNECTED</b> and <b class="up">DATA TRUSTED</b>. A red or grey chip (<b>UNKNOWN</b> means the page lost its link), or a red alert line under the tabs (click it for every alert), means do not trade on this screen.</div>
+        <div><b>2. What is the decision?</b> Only <b class="up">BUY CE</b> or <b class="down">BUY PE</b> means a setup passed the rules. <b class="flat">WAIT</b> and <b class="neu">NO TRADE</b> mean stay out; the line beside it says why.</div>
+        <div><b>3. Can I enter now?</b> The <b>Entry</b> line must say the setup is eligible right now. "Not eligible" means the setup is confirmed but price is not in the entry area, or something blocks it. If the page says <b class="down">STALE</b>, it has lost its link to Prism: nothing on it is current, whatever it shows.</div>
+        <div><b>4. Do the timeframes agree?</b> <b>1H and 15M</b> must point the same way as the side. 5M and 1M are information only.</div>
+        <div><b>5. Where is the idea wrong?</b> <b>Current setup</b> shows the trigger, the entry zone and the invalidation level. If price closes beyond the invalidation, the setup is over. You choose your own stop and size.</div>
+        <div><b>6. Which option?</b> Only for a BUY: open the <b>Options</b> tab. The contract must be <b class="up">FRESH</b> with a tight spread and no blocking findings. "No suitable contract" means no option trade.</div>
+        <div><b>Alerts.</b> The <b>🔔</b> button in the header chooses what tells you when a setup becomes ready, stops being ready, or the data stops being trustworthy: <b>sound + popup</b>, <b>sound</b> or <b>off</b>. A sound needs one click on this page first (a browser rule); a popup needs your browser's permission. The log under the tabs keeps the last few.</div>
+        <div><b>Your own trades.</b> The <b>Trades</b> tab is a notebook: log what you bought and sold (Prism places nothing and reads no account) and it keeps what Prism said at that moment, shows the day's realised result against a loss limit you set (<code>RISK_MAX_DAILY_LOSS</code>), and sizes a trade to your stop.</div>
+        <div><b>7. Then you decide.</b> Prism describes the NIFTY index and places no orders. Enter, size and exit yourself in Angel One. Use <b>Journal</b> afterwards to review what Prism said and why. <b>Analysis</b> holds the detail behind the decision.</div>
+      </div>
+    </details>
+  </section>
+
+  <section class="tab" id="tab-options" role="tabpanel" aria-labelledby="tb-options" hidden>
+    <div class="bar" id="opt-head">–</div>
+    <div id="opt-sel"></div>
+    <div class="panel" style="margin-bottom:6px"><h3>Nearby-strike comparison <span class="mut" style="text-transform:none;letter-spacing:0">checks of each contract's own quote: not a recommendation, not a prediction, and no order is ever placed</span><span class="stale" id="opt-info" style="text-transform:none;letter-spacing:0"></span></h3>
+      <div class="scroll"><table class="t" id="opt-table"></table></div><div id="opt-exp" style="margin-top:6px"></div><div id="opt-win" class="mut" style="margin-top:6px"></div></div>
+  </section>
+
+  <section class="tab" id="tab-analysis" role="tabpanel" aria-labelledby="tb-analysis" hidden><div id="analysis-body"></div></section>
+  <section class="tab" id="tab-journal" role="tabpanel" aria-labelledby="tb-journal" hidden><div id="journal-body"></div></section>
+  <section class="tab" id="tab-trades" role="tabpanel" aria-labelledby="tb-trades" hidden>
+    <div class="panel" style="margin-bottom:6px"><h3>Log a trade you made <span class="mut" style="text-transform:none;letter-spacing:0">a notebook: Prism places no order and reads no account. What you type here, and what Prism said at that moment, are kept beside the journal</span></h3>
+      <div class="tform">
+        <label>Instrument<input id="t-instr" class="wide" type="text" maxlength="60" placeholder="NIFTY 24500 CE 17NOV" autocomplete="off"></label>
+        <label>Side<select id="t-side"><option value="BUY">BUY</option><option value="SELL">SELL</option></select></label>
+        <label>Quantity (units)<input id="t-qty" type="text" inputmode="numeric" placeholder="65" autocomplete="off"></label>
+        <label>Price (premium)<input id="t-price" type="text" inputmode="decimal" placeholder="101.50" autocomplete="off"></label>
+        <label>Setup (optional)<input id="t-setup" class="wide" type="text" maxlength="120" placeholder="setup id Prism showed" autocomplete="off"></label>
+        <label>Note (optional)<input id="t-note" class="wide" type="text" maxlength="300" autocomplete="off"></label>
+        <button id="t-use-setup" type="button" title="fill the setup id with the one Prism's decision is about right now">Use Prism's setup</button>
+        <button id="t-log" type="button">Log trade</button>
+      </div>
+      <div id="t-msg"></div>
+    </div>
+    <div id="trades-body"></div>
+    <div class="panel" style="margin:6px 0"><h3>Size a trade <span class="mut" style="text-transform:none;letter-spacing:0">a calculator: how many lots keep the loss at YOUR stop inside YOUR limits. It does not say whether to trade</span></h3>
+      <div class="tform">
+        <label>Entry premium<input id="r-entry" type="text" inputmode="decimal" placeholder="100" autocomplete="off"></label>
+        <label>Stop premium (yours)<input id="r-stop" type="text" inputmode="decimal" placeholder="80" autocomplete="off"></label>
+        <label>Lot size (units)<input id="r-lot" type="text" inputmode="numeric" autocomplete="off"></label>
+        <label>Capital (optional)<input id="r-capital" type="text" inputmode="decimal" placeholder="from RISK_CAPITAL" autocomplete="off"></label>
+        <label>Risk % (optional)<input id="r-pct" type="text" inputmode="decimal" placeholder="from RISK_PER_TRADE_PCT" autocomplete="off"></label>
+        <label>Day's max loss (optional)<input id="r-max" type="text" inputmode="decimal" placeholder="from RISK_MAX_DAILY_LOSS" autocomplete="off"></label>
+        <button id="t-calc" type="button">Calculate</button>
+      </div>
+      <div id="risk-out" style="margin-top:6px"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const TFS = ["1m", "5m", "15m", "1h"];
+const $ = id => document.getElementById(id);
+const fmtT = (s, secs=true) => s == null ? "–" : new Date(s*1000).toLocaleTimeString("en-GB", {timeZone:"Asia/Kolkata", hour12:false, ...(secs?{}:{second:undefined,hour:"2-digit",minute:"2-digit"})});
+const fmtD = s => s == null ? "–" : new Date(s*1000).toLocaleString("en-GB", {timeZone:"Asia/Kolkata", hour12:false});
+const fmtDT = s => s == null ? "–" : new Date(s*1000).toLocaleString("en-GB", {timeZone:"Asia/Kolkata", hour12:false, day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"});
+const px = v => v == null ? "–" : v.toFixed(2);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const n2 = v => v == null ? "–" : v.toFixed(2);
+const n1 = v => v == null ? "–" : v.toFixed(1);
+const cls = t => t === "bullish" ? "up" : t === "bearish" ? "down" : "neu";
+const arrow = t => t === "bullish" ? "▲" : t === "bearish" ? "▼" : "◆";
+const LABEL = {"1h":"1H", "15m":"15M", "5m":"5M", "1m":"1M"};
+const AGE = a => a == null ? "–" : a < 120 ? a.toFixed(0) + " s" : (a / 60).toFixed(0) + " min";
+const num0 = v => v == null ? "–" : Number(v).toLocaleString("en-IN");
+const ACTION_CLS = {"BUY CE":"buy-ce", "BUY PE":"buy-pe", "WAIT":"wait", "NO TRADE":"no-trade"};
+const STAGE_TXT = {DETECTED:"detected", WAITING_FOR_CONFIRMATION:"waiting for a confirming candle", BLOCKED:"confirmed, but BLOCKED", CONFIRMED:"confirmed, price not in the entry area",
+  READY_TO_ACT:"READY: in the entry area", INVALIDATED:"invalidated", EXPIRED:"expired", MISSED:"missed"};
+const zone = z => z ? n2(z[0]) + " – " + n2(z[1]) : "–";
+const STATUS_CLS = {fresh: "up", stale: "down", "no data": "down", "market closed": "mut"};
+const FRESH_CLS = {fresh: "up", stale: "down", unknown: "flat", "no data": "down", "market closed": "mut"};
+const kv = (label, html, c, title) => `<div><span>${label}</span><b class="${c || ""}"${title ? ` title="${esc(title)}"` : ""}>${html}</b></div>`;
+
+// ---- small UI state that must survive the once-a-second re-render: the open sections, the tab, the last snapshot ----
+const OPEN = new Set(["a-strat", "a-tech", "a-struct", "a-levels", "a-setups", "a-health", "j-decisions", "j-lifecycle"]);
+document.addEventListener("toggle", e => { const k = e.target.dataset && e.target.dataset.key; if (k) { e.target.open ? OPEN.add(k) : OPEN.delete(k); } }, true);
+const sec = (key, title, body, hint) => `<details class="sec" data-key="${esc(key)}"${OPEN.has(key) ? " open" : ""}><summary>${title}${hint ? ` <span class="mut">${hint}</span>` : ""}</summary><div class="secbody">${body}</div></details>`;
+function setHtml(id, html) { const el = $(id); if (el && el._h !== html) { el.innerHTML = html; el._h = html; } }  // only touches the page when something changed
+let TAB = "overview", LAST = null, LINK = false;
+// The page is in one of three states, and every redraw knows which. "loading": no snapshot has arrived yet. "live": the last snapshot is recent (the server pushes at least one a
+// second). "stale": a snapshot was shown, and the link is lost or has gone silent: what is on screen is then the LAST snapshot, kept for inspection, and never a current decision.
+const SILENT_MS = 5000;
+let CONN = "loading", TRIES = 0, SILENCE = null;
+const isStale = () => CONN === "stale";
+const hhmm = s => fmtT(s && s.server_time, false);  // when the last snapshot was made (the server's clock), HH:MM IST
+const stageWord = st => isStale() && st === "READY_TO_ACT" ? "was in the entry area (not current)" : (STAGE_TXT[st] || st);
+
+function planBlock(x) {  // the underlying plan from the levels that were actually detected; never option premium
+  const p = x.plan;
+  if (!p || !p.targets) return "";
+  const t = p.targets.map(g => `<b>T${g.n} ${n2(g.price)}</b> (${esc(g.label)}) +${n1(g.distance)} pts = ${g.reward_risk == null ? "–" : g.reward_risk.toFixed(2)}× the risk`).join(" · ");
+  return `<div>Underlying plan, index points from the trigger ${n2(p.entry_reference)}: risk <b>${n1(p.risk_points)}</b> pts${t ? " · " + t : ""}` +
+    `${p.note ? ` <span class="mut">(${esc(p.note)})</span>` : ""} <span class="mut">— index points, not option premium</span></div>`;
+}
+
+function explainBlock(e) {
+  if (!e) return "";
+  const line = (title, arr) => arr && arr.length ? `<div><b>${title}</b> ${arr.map(esc).join(" · ")}</div>` : "";
+  return `<div class="card"><div><b>In plain words</b> <span class="mut">(${e.setup ? "about the setup this decision refers to" : "no live setup"})</span></div>` +
+    line("What happened:", e.happened) + line("What is happening now:", e.now) + line("What has to happen next:", e.next) +
+    (e.invalidation ? `<div><b>What ends it:</b> ${esc(e.invalidation)}</div>` : "") + line("What blocks entry:", e.blocking) +
+    `<div><b>Timeframes:</b> <span class="up">${esc((e.supports || []).join(", ") || "none")} agree</span> · <span class="down">${esc((e.disagrees || []).join(", ") || "none")} disagree</span> · ` +
+    `<span class="mut">${esc((e.neutral || []).join(", ") || "none")} neutral</span> <span class="mut">(${esc(e.note || "")})</span></div></div>`;
+}
+
+// ================= regime facts and counter-trend permission (Stage 3) =================
+// Facts, not signals: each is shown with the named checks it was made from (✓ holds, ✗ does not, ? could not be judged), and there is no score.
+const FACT_NAME = {strong_trend: "Strong trend", weakening_trend: "Weakening trend", compression: "Compression", volatility_expansion: "Volatility expansion", extended: "Extended market", pause: "Range / pause / pullback / breakout"};
+const FACT_CLS = {bullish: "up", bearish: "down", up: "up", down: "down", yes: "flat", breakout: "flat", range_bound: "flat", trend_pause: "flat", pullback: "flat"};
+const checkLines = cs => (cs || []).map(c => { const g = c.ok === true ? ["✓", "up"] : c.ok === false ? ["✗", "flat"] : ["?", "mut"];
+  return `<div class="why ${c.info ? "mut" : g[1]}">${g[0]} ${esc(c.name)}: <span class="mut">${esc(c.text)}</span>${c.info ? " <span class='mut'>(reported, not a condition)</span>" : ""}</div>`; }).join("");
+
+function regimeBlock(rf) {
+  if (!rf) return "<div class='mut'>The regime facts are not available yet.</div>";
+  if (!rf.available) return `<div class="warnbox">⚠ Regime facts unavailable: ${esc(rf.why)}. Every fact is unknown, and nothing is assumed.</div>`;
+  return `<div class="mut" style="margin-bottom:4px">What kind of market this is, with the evidence. These sit beside the Condition above and never change it; none is a signal and there is no score. As of the 15M candle ending ${fmtT(rf.as_of, false)}.</div>` +
+    Object.entries(rf.facts).map(([k, f]) => `<div class="card"><div><b>${esc(FACT_NAME[k] || k)}</b> — <b class="${FACT_CLS[f.state] || "mut"}">${esc(f.state.replace(/_/g, " "))}</b> <span class="mut">${esc(f.summary)}</span></div>${checkLines(f.checks)}</div>`).join("");
+}
+
+// the structure behind a permission, in real prices. The record uses the bullish view's names; for a PE (a bullish trend exhausting) they read the other way up.
+const STRUCT_LABELS = {
+  CE: [["exhaustion_extreme", "exhaustion low"], ["higher_low", "15M higher low"], ["lower_high", "lower high before it"], ["higher_high", "15M higher high"], ["prior_high", "prior high"]],
+  PE: [["exhaustion_extreme", "exhaustion high"], ["higher_low", "15M lower high"], ["lower_high", "higher low before it"], ["higher_high", "15M lower low"], ["prior_high", "prior low"]],
+};
+const structureLine = (st, side) => st ? `${(STRUCT_LABELS[side] || STRUCT_LABELS.CE).map(([k, name]) => `${name} ${n2(st[k])}`).join(" · ")} · leg ${n1(st.leg)} pts · confirmed ${fmtT(st.confirmed_at, false)}` : "";
+
+function permissionBlock(c) {
+  const groups = {established: "1. an established trend (or an extension)", weakening: "2. the continuation is weakening", structure: "3. a confirmed 15M structural change"};
+  return `<div class="card ${esc(c.side.toLowerCase())}"><div><b>${esc(c.side)}</b> · ${esc(c.strategy_name)} — counter-trend permission ${c.granted ? "<b class='up'>GRANTED</b>" : "<b class='flat'>DENIED</b>"} ` +
+      `<span class="mut">${c.needed ? "needed: the 1H or 15M trend runs against " + esc(c.side) : "not needed: neither the 1H nor the 15M trend runs against " + esc(c.side)}</span></div>` +
+    `<div class="mut">${esc(c.reason)}</div>` +
+    Object.entries(groups).map(([g, title]) => { const cs = (c.checks || []).filter(x => x.group === g); return cs.length ? `<div style="margin-top:3px"><b>${title}</b></div>${checkLines(cs)}` : ""; }).join("") +
+    (c.structure ? `<div style="margin-top:3px"><b>Structural evidence</b> <span class="mut">(real prices)</span></div><div class="why mut">${esc(structureLine(c.structure, c.side))}</div>` : `<div class="why mut">no confirmed 15M structural change yet</div>`) +
+    (c.setup_id ? `<div class="why mut">the setup it permitted: ${esc(c.setup_id)}</div>` : "") + `</div>`;
+}
+
+function setupCard(x, inner) {  // inner: drawn inside its strategy's own block (the strategy and the side are already said there)
+  const ct = x.counter_trend;
+  const lv =(x.support.length ? "support " + x.support.map(n2).join(", ") : "") + (x.resistance.length ? " · resistance " + x.resistance.map(n2).join(", ") : "");
+  const live = isStale() ? " — <b class='flat'>last known (STALE): not actionable</b>" : x.stage === "READY_TO_ACT" ? " — <b class='up'>actionable now</b>" : x.stage === "BLOCKED" ? " — <b class='flat'>not actionable: see the blockers</b>" :
+    x.status === "CONFIRMED" ? " — <b class='flat'>not actionable: " + esc((x.price_state || "").replace(/_/g, " ") || "conditions") + "</b>" : "";
+  const area = x.zone ? (x.status === "CONFIRMED" ? "Entry area " : "Watch area ") + zone(x.zone) : "";
+  return (inner ? "<div>" : `<div class="card ${esc(x.direction.toLowerCase())}">`) +
+    `<div>${inner ? "" : `<b>${esc(x.direction)}</b> · ${esc(x.strategy_name)} — `}<span class="st st-${esc(x.stage)}">${esc(stageWord(x.stage))}</span>` +
+      ` <span class="mut">detected ${fmtT(x.detected_at, false)}${x.confirmed_at ? " · confirmed " + fmtT(x.confirmed_at, false) : ""} · this status since ${fmtT(x.status_since, false)}${x.resumed ? " · resumed after a restart" : ""}</span>${live}</div>` +
+    `<div>${area}${x.trigger != null ? ` · trigger <b>${n2(x.trigger)}</b>` : ""} · invalidation <b>${n2(x.invalidation)}</b>` +
+      `${x.level != null ? ` · ${esc(x.level_label)} ${n2(x.level)}` : ""}${lv ? ` <span class="mut">(${esc(lv)})</span>` : ""}</div>` +
+    planBlock(x) + `<div class="mut">Expiry · status (Prism's wording): ${esc(x.stage_text || "")}</div>` +
+    `<div class="mut">To confirm: ${esc(x.confirm_text)}</div>` +
+    x.reasons.map(r => `<div class="why up">+ ${esc(r)}</div>`).join("") +
+    (x.quality || []).map(q => `<div class="why ${q.ok ? "mut" : "flat"}">${q.ok ? "✓" : "⚠"} ${esc(q.name)}: ${esc(q.text)}</div>`).join("") +
+    (ct ? `<div class="why ${ct.granted ? "up" : "flat"}">⚑ Counter-trend permission ${ct.granted ? "granted" : "denied"}: ${esc(ct.reason)}</div>` +
+      (ct.structure ? `<div class="why mut">${esc(structureLine(ct.structure, x.direction))}</div>` : "") : "") +
+    x.blockers.map(r => `<div class="why flat">⏸ ${esc(r)}</div>`).join("") +
+    x.against.map(r => `<div class="why flat">− ${esc(r)}</div>`).join("") +
+    (x.note ? `<div class="why mut">${esc(x.note)}</div>` : "") + `</div>`;
+}
+
+const atrNote = a => a && a.used != null ? n1(a.used) + (a.with_gap != null && Math.abs(a.with_gap - a.used) > 0.05 * a.used ? ` (${n1(a.with_gap)} with the overnight gap)` : "") : "–";
+const flagsHtml = (fl, full) => (fl || []).map(f => full
+  ? `<div class="why sev-${esc(f.severity)}">${f.severity === "avoid" ? "⛔" : "⚠"} ${esc(f.text)}</div>`
+  : `<span class="sev-${esc(f.severity)}" title="${esc(f.text)}">${f.severity === "avoid" ? "⛔" : "⚠"} ${esc(f.code.replace(/_/g, " "))}</span>`).join(full ? "" : " · ");
+
+// three different clocks, never mixed: when Prism received the message, when the exchange says the quote was last updated, and when the last trade happened.
+// A message received a moment ago can still carry an old exchange time, and only the exchange time says how old the quote is.
+function freshnessWords(c, full) {
+  const ex = c.exchange_status === "unknown" ? "unknown" + (full && c.exchange_reason ? " (" + esc(c.exchange_reason) + ")" : "") : AGE(c.exchange_age);
+  return `<b class="${FRESH_CLS[c.freshness] || ""}">${esc(String(c.freshness).toUpperCase())}</b> · receipt age ${AGE(c.receipt_age)} · exchange-time age ${ex} · last-trade age ${AGE(c.last_trade_age)}`;
+}
+
+// ================= header, alerts =================
+const chip = (id, text, kind, title) => { const e = $(id); const k = "chip " + kind; if (e.textContent !== text) e.textContent = text; if (e.className !== k) e.className = k; e.title = title || ""; };
+
+// the move from the previous close: worked out by the backend (market.change); this only formats it. Unknown is said, never drawn as a zero.
+function changeHtml(ch, spot, stale) {
+  if (!spot || spot.ltp == null) return "";
+  if (!ch) return `<span class="mut" title="no market data from Prism yet">– vs prev close</span>`;
+  if (!ch.available) return `<span class="mut" title="${esc(ch.why)}">change unknown</span>`;
+  const up = ch.points > 0, dn = ch.points < 0;
+  return `<span class="${stale ? "mut" : up ? "up" : dn ? "down" : "neu"}" title="against ${esc(ch.basis)}: ${n2(ch.previous_close)}${ch.previous_close_date ? " (" + esc(ch.previous_close_date) + ")" : ""}${stale ? " — as of the last snapshot" : ""}">` +
+    `${up ? "▲ +" : dn ? "▼ " : "◆ "}${n2(ch.points)} (${ch.percent > 0 ? "+" : ""}${ch.percent.toFixed(2)}%)</span>`;
+}
+
+// two different clocks, never mixed: when Prism RECEIVED the NIFTY tick, and the EXCHANGE's own time for it (the health payload's exchange_age / exchange_status)
+function spotAgeHtml(h, spot, hs) {
+  if (!h.live) return "market closed: the last price received, not live";
+  if (!spot || spot.age == null) return "<b class='stale'>no NIFTY tick yet</b>";
+  const x = hs.exchange_status === "unknown" ? `<b class="flat" title="${esc(hs.exchange_reason || "")}">unknown</b>` : hs.exchange_age == null ? "–" :
+    hs.exchange_status === "stale" ? `<b class="stale" title="${esc(hs.exchange_reason || "")}">${AGE(hs.exchange_age)} old: STALE</b>` : `${AGE(hs.exchange_age)} old`;
+  return (spot.status === "fresh" ? `NIFTY tick received ${AGE(spot.age)} ago` : `<b class="stale">STALE: last NIFTY tick ${AGE(spot.age)} ago</b> (received)`) + ` · exchange time ${x}`;
+}
+
+function renderHeader(s, h) {
+  const stale = isStale();
+  const spot = s.instruments.find(i => i.role === "SPOT"), c = s.connection, hs = (h.instruments || []).find(i => i.role === "SPOT") || {};
+  const fresh = spot && spot.status === "fresh";
+  const el = $("spot");
+  el.textContent = spot ? px(spot.ltp) : "–";
+  el.className = "spot" + (stale ? " dim" : h.live && !fresh ? " stale" : "");  // an old price must never look live
+  setHtml("spot-chg", changeHtml(s.trading && s.trading.market ? s.trading.market.change : null, spot, stale));
+  if (stale) {  // the last snapshot is all there is: no frozen tick age, no verdict on the market, the feed, the data or the system
+    const why = `the dashboard has lost its link to Prism; the last snapshot was made at ${fmtT(s.server_time)} IST`;
+    setHtml("spot-age", `<b class="stale">STALE since ${hhmm(s)}: not current</b>`);
+    chip("c-market", "MARKET UNKNOWN", "neu", why); chip("c-feed", "FEED UNKNOWN", "neu", why); chip("c-data", "DATA UNKNOWN", "neu", why); chip("c-ready", "SYSTEM UNKNOWN", "neu", why);
+    $("c-link").hidden = false;
+    setHsum(`last snapshot ${fmtT(s.server_time)} IST · not current`);
+    $("clock").textContent = "last snapshot " + fmtD(s.server_time) + " IST";
+    return;
+  }
+  setHtml("spot-age", spotAgeHtml(h, spot, hs));
+  chip("c-market", h.live ? "MARKET OPEN" : "MARKET CLOSED", h.live ? "ok" : "neu");
+  const fk = c.state === "connected" ? "ok" : (c.state === "connecting" || c.state === "starting") ? "warn" : "bad";
+  chip("c-feed", "FEED " + String(c.state).replace(/_/g, " ").toUpperCase(), fk, (h.feed && h.feed.reason) || "");
+  chip("c-data", h.live ? (h.trusted ? "DATA TRUSTED" : "DATA NOT TRUSTED") : "DATA NOT LIVE", h.live ? (h.trusted ? "ok" : "bad") : "neu");
+  const rd = h.readiness;  // the start-up / readiness state: READY only when the history is complete and validated, the feed is up and the clock is trusted
+  if (rd) chip("c-ready", rd.ready ? (rd.pre_market ? "READY FOR OPEN" : "SYSTEM READY") : "NOT READY: " + rd.state.replace(/_/g, " "), rd.ready ? "ok" : rd.state === "FAILED" ? "bad" : "warn", rd.summary);
+  $("c-link").hidden = true;
+  const rej = Object.values(c.ticks_rejected || {}).reduce((a, b) => a + b, 0);
+  setHsum(`last tick ${fmtT(c.last_tick_received)} · ticks ${c.ticks_accepted} ok / ${rej} rejected · reconnects ${c.reconnects}${(h.issues || []).length ? " · " + h.issues.length + " data issue(s)" : ""}`);
+  $("clock").textContent = fmtD(s.server_time) + " IST";
+}
+
+// before the first snapshot: the page says it is waiting, and says so again if the server cannot be reached; it never shows a placeholder as if it were data
+function setHsum(text) { $("hsum").textContent = text; $("hsum").title = text; }  // the header line is cut with an ellipsis when the width is short: the whole of it stays readable on hover
+function renderLoading() {
+  const why = TRIES > 1 ? `Prism cannot be reached (attempt ${TRIES}): retrying every 2 s.` : "Connecting to Prism and waiting for the first snapshot.";
+  $("spot").textContent = "–"; $("spot").className = "spot dim"; setHtml("spot-chg", ""); setHtml("spot-age", `<span class="mut">${esc(why)}</span>`);
+  for (const [id, t] of [["c-market", "CONNECTING"], ["c-feed", "FEED …"], ["c-data", "DATA …"], ["c-ready", "WAITING"]]) chip(id, t, "neu", why);
+  $("c-link").hidden = TRIES < 2; setHsum(""); $("clock").textContent = "";
+  setHtml("stale", ""); setHtml("alerts", ""); $("jserr").textContent = "";
+  $("decision").className = "decision loading";
+  setHtml("decision", `<div class="loadbox"><b>LOADING</b> — ${esc(why)} No decision is available yet; nothing on this page is a decision.</div>`);
+  for (const id of ["tfrow", "ctx", "setup", "strat", "rg", "dhs", "ev3"]) setHtml(id, `<span class="mut">waiting for data</span>`);
+}
+
+// every alert, but ONE line on the page: the count, the most serious one and "(+N more)"; the full list opens on a click and floats over the page, so the layout never jumps
+function renderAlerts(h) {
+  const rd = h.readiness, items = [];
+  if (rd && !rd.ready) items.push({sev: rd.state === "FAILED" ? "bad" : "warn", head: "NOT READY · " + rd.state.replace(/_/g, " "), text: `${rd.summary}. Decisions are blocked until the data is complete and trusted.`});
+  for (const w of h.issues || []) items.push({sev: "bad", head: "Data not trusted", text: `${w}. No BUY decision is possible until this is fixed.`});
+  for (const w of h.warnings || []) items.push({sev: "warn", head: "", text: w});
+  if (typeof T !== "undefined" && T.data && T.data.available && T.data.daily_loss_reached) items.push({sev: "bad", head: "Your daily loss limit is reached", text: `${rs(T.data.lost_today)} lost of ${rs(T.data.limits.max_daily_loss)}. Prism's decisions are unchanged: this limit is yours, and it says stop for the day`});
+  if (!items.length) { setHtml("alerts", ""); return; }
+  const worst = items.some(i => i.sev === "bad") ? "bad" : "warn", lead = items.find(i => i.sev === worst);
+  const icon = sev => sev === "bad" ? "⛔" : "⚠";
+  setHtml("alerts", `<details class="alerts ${worst}" data-key="alerts"${OPEN.has("alerts") ? " open" : ""}><summary title="click for every alert">${icon(worst)} <b>${items.length} alert${items.length === 1 ? "" : "s"}</b>: ` +
+    `${esc(lead.head || lead.text)}${items.length > 1 ? ` (+${items.length - 1} more)` : ""} <span class="mut">▾ details</span></summary>` +
+    `<div class="alertlist">${items.map(i => `<div class="alert ${i.sev}">${icon(i.sev)} ${i.head ? `<b>${esc(i.head)}</b>: ` : ""}${esc(i.text)}</div>`).join("")}</div></details>`);
+}
+
+// the page-wide notice when the link is not live: the last snapshot is still shown (dimmed), for inspection only
+function renderStale(s) {
+  if (!isStale()) { setHtml("stale", ""); return; }
+  setHtml("stale", `<div class="stalebar">⛔ STALE since ${hhmm(s)} — NOT ACTIONABLE <span>the page has lost its link to Prism and is showing the last snapshot (made ${fmtT(s.server_time)} IST), for inspection only. It is not a current decision, price or status. Reconnecting…</span></div>`);
+}
+
+// ================= overview =================
+function liveSetup(t) {
+  const d = t.decision, ex = t.explain || {};
+  return t.setups.find(x => x.id === d.setup_id) || t.setups.find(x => x.id === ex.setup) || null;
+}
+
+function optionHealth(o) {
+  if (!o || !o.available) return `<span class="mut">no option quotes yet</span>`;
+  const n = {fresh: 0, stale: 0, unknown: 0, "no data": 0, "market closed": 0};
+  for (const c of o.contracts) n[c.freshness] = (n[c.freshness] || 0) + 1;
+  const bad = n.stale + n.unknown;
+  const sel = contractOffer(o).contract;  // a contract is named here only when the final decision is the BUY it was selected for
+  if (n["market closed"] === o.contracts.length) return `<b class="neu">market closed</b><span class="mut" style="display:inline;text-transform:none;letter-spacing:0"> · ${o.contracts.length} contracts, quotes are not live</span>`;
+  return `<b class="${n.fresh ? (bad ? "flat" : "up") : "neu"}">${n.fresh} / ${o.contracts.length} fresh</b>` +
+    `<span class="mut" style="display:inline;text-transform:none;letter-spacing:0"> · ${n.stale} stale · ${n.unknown} unknown · ${n["no data"]} no data</span>` +
+    (sel ? ` · selected ${esc(sel.kind)} ${sel.strike}: <b class="${FRESH_CLS[sel.freshness] || ""}">${esc(String(sel.freshness).toUpperCase())}</b>` : "");
+}
+
+// A long event description is shown as a concise summary with its full text one click away: nothing is cut off without a way to read it.
+function eventConcise(text) {
+  const s = String(text).replace(/^[A-Z_]+:\s*/, "");  // the status is already in its own column
+  if (s.length <= 110) return [s, false];
+  const cut = s.slice(0, 110), i = cut.lastIndexOf(" ");
+  return [(i > 70 ? cut.slice(0, i) : cut) + "…", true];
+}
+function eventRow(e) {
+  const [short, more] = eventConcise(e.text), key = "ev-" + e.seq;
+  const cells = `<span class="mut">${fmtT(e.time, false)}</span><b class="${e.direction === "CE" ? "up" : "down"}">${esc(e.direction)}</b><span>${esc(e.strategy_name)}</span>` +
+    `<span class="st st-${esc(e.status)}">${esc(e.status.replace(/_/g, " ").toLowerCase())}</span><span class="mut">${esc(short)}${more ? ` <span class="evmore">▸ full description</span>` : ""}</span>`;
+  return more ? `<details class="evd" data-key="${esc(key)}"${OPEN.has(key) ? " open" : ""}><summary class="evrow">${cells}</summary><div class="evfull">${esc(e.text)}</div></details>`
+              : `<div class="evrow">${cells}</div>`;
+}
+
+// ---- the regime facts on the Overview: ALL six, each as it is. Held (named), none (muted), or UNKNOWN (amber, dashed, with the reason): unknown is never drawn as "none", as a negative
+// condition or as a quiet market. The checks behind each fact are in the Analysis tab; there is no score. ----
+const FACT_SHORT = {strong_trend: "Strong trend", weakening_trend: "Weakening trend", compression: "Compression", volatility_expansion: "Expansion", extended: "Extension", pause: "Range / pause / pullback"};
+const FACT_ORDER = ["strong_trend", "weakening_trend", "compression", "volatility_expansion", "extended", "pause"];
+function factCell(k, f, quiet) {  // quiet: every fact is unknown for the same reason, which is said once beneath the cells instead of six times
+  const st = f && f.state ? f.state : "unknown", unknown = st === "unknown", none = st === "none" || st === "no";
+  const word = unknown ? "unknown" : none ? "none" : st.replace(/_/g, " ");
+  const why = f && f.summary ? f.summary : "no regime data has been received";
+  return `<div class="rgc ${unknown ? "unk" : none ? "mut" : (FACT_CLS[st] || "flat")}" title="${esc(FACT_SHORT[k] + ": " + word + " — " + why)}"><span>${esc(FACT_SHORT[k])}</span><b>${esc(word)}</b>` +
+    (unknown && !quiet ? `<small>${esc(why)}</small>` : "") + `</div>`;
+}
+
+// one block: the six facts, and, only when the 1H or 15M runs against a side a counter-trend strategy considered, its permission with the reason
+function regimeRow(rf, cts) {
+  const need = (cts || []).filter(c => c.needed);
+  const usable = rf && rf.available && rf.facts;  // when the regime layer says it cannot be trusted, whatever states it carries are not shown: every fact is unknown
+  const cells = FACT_ORDER.map(k => factCell(k, usable ? rf.facts[k] : null, !usable)).join("");
+  const note = !rf ? `<div class="rgnote flat">Regime facts: not received yet. Every fact is unknown.</div>` :
+    !rf.available ? `<div class="rgnote flat" title="${esc(rf.why)}">⚠ Regime facts unavailable: ${esc(rf.why)}. Every fact is unknown; nothing is assumed.</div>` : "";
+  const ct = need.length ? `<div class="rgnote" title="${esc(need.map(c => c.side + ": " + c.reason).join(" | "))}">Counter-trend permission: ` +
+    need.map(c => `<b>${esc(c.side)}</b> ${c.granted ? "<b class='up'>granted</b>" : "<b class='flat'>denied</b>"} <span class="mut">${esc(c.reason)}</span>`).join(" · ") + `</div>` : "";
+  return `<div class="wide"><div class="rg">${cells}</div>${note}${ct}</div>`;
+}
+
+// ---- the strategy monitor: only the strategies that hold a live setup get a row (name, side, state, the first blocker, a link to its Analysis detail); the rest are ONE line that opens
+// into a small table. Conflicts are said once, beneath. Nothing here is computed: the setups and their states are the backend's. ----
+const STATE_SHORT = {DETECTED: "detected", WAITING_FOR_CONFIRMATION: "waiting", BLOCKED: "blocked", CONFIRMED: "confirmed", READY_TO_ACT: "ready", INVALIDATED: "invalidated", EXPIRED: "expired", MISSED: "missed"};
+const stateWord = st => isStale() && st === "READY_TO_ACT" ? "was ready" : (STATE_SHORT[st] || String(st).replace(/_/g, " ").toLowerCase());
+const detailLink = (id, text) => `<button class="linkbtn" data-goto="analysis" data-strategy="${esc(id)}">${text || "detail →"}</button>`;
+
+function monitorHtml(t, d) {
+  const live = [...t.setups].sort((p, q) => (q.id === d.setup_id) - (p.id === d.setup_id));
+  const why = x => (x.blockers && x.blockers[0]) || x.stage_text || "";  // the first thing that blocks entry; cautions and the rest are under the strategy in Analysis
+  const row = x => `<tr><td style="white-space:nowrap" title="${esc(x.strategy)} · ${esc(x.id)}">${esc(x.strategy_name)}</td><td class="dir ${x.direction === "CE" ? "up" : "down"}" title="${x.direction === "CE" ? "call" : "put"}">${esc(x.direction)}</td>` +
+    `<td><span class="pillst"><span class="st st-${esc(x.stage)}">${esc(stateWord(x.stage))}</span></span></td><td class="why" title="${esc(why(x))}">${esc(why(x))}</td><td class="go">${detailLink(x.strategy)}</td></tr>`;
+  const strong = live.filter(x => x.status === "WAITING_FOR_CONFIRMATION" || x.status === "CONFIRMED");
+  const conflicts = [];
+  if (new Set(strong.map(x => x.direction)).size > 1) conflicts.push(`a call and a put setup are both live (${strong.map(x => x.direction + " " + x.strategy_name).join(", ")}): neither is taken`);
+  for (const r of (d.against || [])) if (/^ignored /.test(r)) conflicts.push(r);
+  const idle = t.strategies.filter(z => !(z.setups || []).length), watching = idle.filter(z => z.active).length;
+  const sideChip = (z, i) => { const sd = (z.sides || [])[i]; return sd ? `<span class="pillst ${sd.applicable ? "" : "mut"}" title="${esc(sd.note || "")}">${esc(sd.side)} ${esc(stateWord(sd.state))}</span>` : ""; };
+  const idleRow = z => `<tr><td style="white-space:nowrap" title="${esc(z.id)}">${esc(z.name)}</td><td>${sideChip(z, 0)} ${sideChip(z, 1)}</td><td class="go">${detailLink(z.id)}</td></tr>`;
+  return !t.strategies.length ? `<span class="mut">no strategy data</span>` :
+    (live.length ? `<table class="strat">${live.map(row).join("")}</table>` : `<div class="mut">No strategy has a live setup.</div>`) +
+    conflicts.slice(0, 2).map(c => `<div class="conf" title="${esc(c)}">⚠ ${esc(c)}</div>`).join("") + (conflicts.length > 2 ? `<div class="conf">⚠ +${conflicts.length - 2} more: see the decision's reasons</div>` : "") +
+    (idle.length ? `<details class="more" data-key="ov-inactive"${OPEN.has("ov-inactive") ? " open" : ""}><summary>${idle.length} without a setup: ${watching} watching, ${idle.length - watching} not suited to the market</summary><table class="strat">${idle.map(idleRow).join("")}</table></details>` : "");
+}
+
+const STRUCT = {HH_HL: "HH·HL", LH_LL: "LH·LL", mixed: "mixed", insufficient: "–"};
+
+function renderOverview(s, h) {
+  const t = s.trading, a = s.analysis || {available: false}, o = s.options, stale = isStale();
+  if (!t) { setHtml("decision", "<div class='dhead'>Trading decision not available yet.</div>"); return; }
+  const d = t.decision, m = t.market, se = t.session, ex = t.explain || {}, x = liveSetup(t);
+  const spot = s.instruments.find(i => i.role === "SPOT"), hs = (h.instruments || []).find(i => i.role === "SPOT") || {};
+  const also = d.also || [];
+  // ---- decision ----
+  const dc = stale ? "stale" : ACTION_CLS[d.action] || "no-trade";
+  const blockers = (ex.blocking || []).filter(b => !d.headline.includes(b)).slice(0, 2);
+  const sess = se ? `${se.phase.replace(/_/g, " ")} · ${se.entries_allowed ? "entries allowed" : "no new entries"}` : "–";  // (escaped where it is drawn: `esc(sess` below)
+  const popBody = `<div class="popbody">${stale ? `<div class="warnbox">The last snapshot (made ${fmtT(s.server_time)} IST): not a current decision.</div>` : ""}<div class="mut" style="margin-bottom:6px">A decision is what the rules say about the NIFTY index; it is not a recommendation to trade. ${t.available ? "It uses completed candles only; a forming candle never confirms a setup." : ""}</div>` +
+    explainBlock(t.explain) +
+    `<div><b>${esc(d.headline)}</b></div>` + d.reasons.map(r => `<div class="why up" style="margin-left:12px">+ ${esc(r)}</div>`).join("") +
+    d.against.map(r => `<div class="why flat" style="margin-left:12px">− ${esc(r)}</div>`).join("") +
+    (also.length ? `<div class="mut" style="margin-left:12px">also matches: ${also.map(esc).join(", ")}</div>` : "") +
+    (x ? `<div style="margin-top:6px"><b>Setup expiry and invalidation</b></div><div class="mut">${esc(x.stage_text || "")}</div><div class="mut">To confirm: ${esc(x.confirm_text)}</div>` +
+         `<div>Invalidation <b>${n2(x.invalidation)}</b>${ex.invalidation ? " · " + esc(ex.invalidation) : ""}</div>` + planBlock(x) : "") + `</div>`;
+  const did = (k, v) => `<span><span class="k">${k}</span>${v}</span>`;
+  const id = v => v ? `<code title="${esc(v)}">${esc(v)}</code>` : "<b>–</b>";
+  const entry = stale ? `<b class="flat">not eligible: STALE</b>` : `<b class="${ex.actionable ? "up" : "flat"}">${ex.actionable ? "eligible (actionable now)" : "not eligible"}</b>`;
+  setHtml("decision",
+    `<div class="dbadge"><div class="dtxt" title="A decision is what the rules say about the NIFTY index; it is not a recommendation to trade.">${stale ? "STALE" : esc(d.action)}</div><div class="dsub">${stale ? "last decision: " + esc(d.action) : esc(sess)}</div></div>` +
+    `<div><div class="dhead">${stale ? `STALE since ${hhmm(s)} — NOT ACTIONABLE` : esc(d.headline)}</div>` +
+      (stale ? `<div class="dblock">Last known, not current: ${esc(d.headline)}</div>` : blockers.length ? `<div class="dblock" title="${esc(blockers.join(" · "))}">⏸ Blocks entry: ${blockers.map(esc).join(" · ")}</div>` : "") + `</div>` +
+    `<div class="dexp"><div class="did">${did("Strategy", `<b>${esc(d.strategy_name || "none")}</b>`)}${did("Strategy ID", id(d.strategy))}${did("Setup ID", id(d.setup_id))}` +
+      `${did("Agrees", also.length ? `<b title="${esc(also.join(" · "))}">${also.map(esc).join(", ")}</b>` : "<b>none</b>")}</div>` +
+      `<div class="go"><span>Entry ${entry}</span><details class="pop" data-key="explain"${OPEN.has("explain") ? " open" : ""}><summary>Explain this decision ▾</summary>${popBody}</details></div></div>`);
+  $("decision").className = "decision " + dc;
+
+  // ---- timeframes: only 1H and 15M decide the allowed side ----
+  const tfc = tf => { const v = a.available ? a.timeframes[tf] : null;
+    return `<div class="tf"><span class="tfl">${LABEL[tf]}</span>${v ? `<b class="${cls(v.trend)}">${arrow(v.trend)} ${esc(v.trend)}</b><small>ADX ${n1(v.adx)} · RSI ${n1(v.rsi14)} · ${esc(STRUCT[(v.structure || {}).pattern] || "–")}${v.warm ? "" : " · warming up"}</small>` : `<b class="neu">–</b><small>not available</small>`}</div>`; };
+  const al = a.available ? a.condition.alignment : null;
+  setHtml("tfrow",
+    `<div class="tfgrp gate" title="${esc(ex.note || "")}"><div class="tfcap">Decides the allowed side</div>${tfc("1h")}${tfc("15m")}</div>` +
+    `<div class="tfgrp info"><div class="tfcap">Information only</div>${tfc("5m")}${tfc("1m")}</div>` +
+    `<div class="tfal"><span class="mut" style="font-size:10px;text-transform:uppercase;letter-spacing:.04em">1H + 15M alignment</span><b class="${al ? (al.label.startsWith("aligned") ? "up" : al.label === "conflicting" ? "flat" : "neu") : "neu"}">${al ? esc(al.label.replace(/_/g, " ")) : "–"}</b>` +
+    `<small title="${esc(al ? al.text : "")}">${al ? esc(al.text) : "only the 1H and 15M decide which side is allowed; 5M and 1M are information"}</small></div>`);
+
+  // ---- market context (the market's direction, condition and volatility are said here once) ----
+  const lv = a.available ? a.levels : null, pd = a.available ? a.reference.previous_day : null;
+  const near = (arr, c) => arr && arr.length ? `<span class="${c}">${arr.slice(0, 2).map(l => n2(l.price)).join(" / ")}</span>` : "–";
+  const orr = se && se.opening_range ? `${n2(se.opening_range.low)}–${n2(se.opening_range.high)}${se.opening_range.complete ? "" : " (forming)"}` : "–";
+  setHtml("ctx",
+    kv("Market direction", m ? arrow(m.direction) + " " + esc(m.direction) : "–", m ? cls(m.direction) : "", "the direction of the market as a whole, from the 1H and 15M") +
+    kv("Condition", m ? esc(m.regime.replace(/_/g, " ")) : "–", "", m ? m.text : "") + kv("Volatility", m ? esc(m.volatility) : "–") +
+    kv("ATR 5M · 15M", m && m.atr ? `${atrNote(m.atr["5m"])} · ${atrNote(m.atr["15m"])}` : "–", "", "ATR: the candle size the rules use (5M intraday and 15M)") +
+    kv("Opening range", orr) + kv("Open vs prev close", m && m.gap ? `${m.gap.points >= 0 ? "+" : ""}${m.gap.points.toFixed(0)} pts (${m.gap.percent.toFixed(2)}%)` : "–", "", "the opening gap: today's open against the previous close (the header shows where the price is now)") +
+    kv("Support", near(lv && lv.support, "up")) + kv("Resistance", near(lv && lv.resistance, "down")) +
+    kv("Prev day H / L / C", pd ? `${n2(pd.pdh)} / ${n2(pd.pdl)} / ${n2(pd.pdc)}${pd.stale ? " (stale)" : ""}` : "–", pd && pd.stale ? "flat" : "", pd ? `previous day high / low / close${pd.stale ? " (stale: not refreshed for today)" : ""}` : ""));
+  setHtml("rg", regimeRow(m && m.regime_facts, t.counter_trend));
+
+  // ---- current setup (the strategy and the setup ID are in the decision above; shown here only when the decision names none) ----
+  const expiry = x ? [x.stage_text, ex.setup === x.id ? (ex.next || [])[0] : null, ex.setup === x.id ? ex.invalidation : null].filter(Boolean).join(" · ") : "";
+  setHtml("setup-h", `Current setup${x && x.strategy !== d.strategy ? ` <span class="mut" style="text-transform:none;letter-spacing:0" title="${esc(x.id)}">${esc(x.strategy_name)} (the decision names no strategy)</span>` : ""}`);
+  setHtml("setup", x
+    ? kv("Setup side", `${arrow(x.direction === "CE" ? "bullish" : "bearish")} ${esc(x.direction)} (${x.direction === "CE" ? "call" : "put"})`, x.direction === "CE" ? "up" : "down") +
+      kv("Stage", `<span class="st st-${esc(x.stage)}">${esc(stageWord(x.stage))}</span>`, "", x.stage_text) + kv("Detected · confirmed", `${fmtT(x.detected_at, false)} · ${x.confirmed_at ? fmtT(x.confirmed_at, false) : "not yet"}`, x.confirmed_at ? "up" : "flat", x.confirm_text) +
+      kv("Trigger", n2(x.trigger)) + kv("Entry zone", zone(x.zone)) + kv("Invalidation", n2(x.invalidation)) +
+      `<div class="wide"><span>Expiry · what ends it <span class="mut" style="text-transform:none;letter-spacing:0">(Prism's own wording)</span></span><b title="${esc(expiry)}" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${stale ? "last known: " : ""}${esc(expiry)}</b></div>`
+    : `<div class="wide mut"><b>No live setup.</b> ${t.events.length || t.recent.length ? "Setup events earlier today: see Recent events and the Journal." : "None has been announced today."}</div>`);
+
+  setHtml("strat", monitorHtml(t, d));
+
+  // ---- data health: the NIFTY spot's receipt time and its exchange time are two different things and are shown as two ----
+  const f = h.feed || {}, tm = h.time, c = s.connection;
+  const xt = hs.exchange_status === "unknown" ? "unknown" : hs.exchange_age == null ? "–" : AGE(hs.exchange_age) + (hs.exchange_status === "stale" ? " STALE" : "");
+  setHtml("dhs", stale
+    ? `<div class="wide"><span>Data health</span><b class="flat">unknown: the page lost its link to Prism (last snapshot ${fmtT(s.server_time)} IST); nothing here is current</b></div>` +
+      ["Feed", "NIFTY spot", "Candles", "Clock"].map(k => kv(k, "unknown", "flat")).join("")
+    : kv("Feed", `${esc(c.state)}${c.reconnects ? ` · ${c.reconnects} reconnect(s)` : ""}`, c.state === "connected" ? "up" : (c.state === "connecting" || c.state === "starting") ? "flat" : "down", f.reason || "") +
+      kv("NIFTY spot", !spot || spot.age == null ? "no tick yet" : `${esc(spot.status)} · received ${AGE(spot.age)} · exchange ${esc(xt)}`, !h.live ? "mut" : spot && spot.status === "fresh" && hs.exchange_status !== "stale" ? "up" : "down", "receipt age and exchange-time age are different clocks") +
+      kv("Candles", t.data ? (t.data.ok ? "complete" : "incomplete") : "–", t.data && t.data.ok ? "up" : "flat", t.data && !t.data.ok ? (t.data.issues || []).join("; ") : "") +
+      kv("Clock", tm ? (tm.trusted ? "trusted" : "NOT trusted") : "not checked", tm ? (tm.trusted ? "up" : "down") : "mut", tm && !tm.trusted ? tm.reason : "") +
+      `<div class="span2"><span>Option feed</span><b>${optionHealth(o)}</b></div>`);  // (the start-up state is the header's SYSTEM chip: it is not said twice)
+
+  // ---- latest three events ----
+  setHtml("ev3", t.events.length ? t.events.slice(0, 3).map(eventRow).join("") : `<span class="mut">no setup events today</span>`);
+}
+
+// ================= options =================
+// ---- the contract on offer. ONLY when the FINAL decision (the trading payload's) is BUY CE / BUY PE, the options payload carries the same decision, and its selection is a contract of that side.
+// Anything else is "No contract selected": a contract is never shown as selected because the options data says so alone. ----
+function contractOffer(o) {
+  const t = LAST && LAST.trading, d = o.decision || {}, s = o.selection || {};
+  const final = t && t.decision ? t.decision.action : null;
+  const side = /^BUY (CE|PE)$/.test(final || "") ? final.slice(-2) : null;
+  const agree = !!t && d.action === final;
+  const ok = !!(side && agree && s.actionable && s.contract && s.kind === side && s.contract.kind === side);
+  return {final, side, agree, ok, contract: ok ? s.contract : null, conflict: !ok && !!s.actionable};  // conflict: the options data offers a contract that the decision does not call for
+}
+
+// who made the decision this contract serves, and who else agrees: the decision's own fields, as the backend carried them
+function originLine(d) {
+  const also = d.also || [];
+  return `<div class="origin">${isStale() ? "Last chosen for" : "Chosen for"} <b>${esc(d.action || "–")}</b> from <b>${esc(d.strategy_name || "–")}</b>${d.strategy ? ` <code>${esc(d.strategy)}</code>` : ""}` +
+    ` · setup ${d.setup_id ? `<code>${esc(d.setup_id)}</code>` : "–"} · also matches: ${also.length ? `<b>${also.map(esc).join(", ")}</b>` : "none"}</div>`;
+}
+
+const quoteAges = c => `${AGE(c.receipt_age)} / ${c.exchange_status === "unknown" ? "unknown" : AGE(c.exchange_age)}`;
+function alternativesTable(list) {
+  return `<div style="margin-top:6px"><b>Alternatives</b> <span class="mut">next in the same order; each has no blocking finding</span></div><div class="scroll"><table class="t"><tr><th class="l">Contract</th><th>Expiry</th><th>LTP</th><th>Bid × Ask</th>` +
+    `<th>Spread</th><th>Volume (units)</th><th>OI (units)</th><th title="received by Prism / the exchange's own time for the quote">Quote age: received / exchange</th><th class="l">Warnings</th></tr>` +
+    list.map(a => `<tr><td class="l">${esc(a.kind)} ${a.strike}</td><td>${esc(a.expiry)}</td><td>${n2(a.ltp)}</td><td>${n2(a.bid)} × ${n2(a.ask)}</td><td>${a.spread_pct == null ? "–" : a.spread_pct.toFixed(2) + "%"}</td>` +
+      `<td>${num0(a.volume)}</td><td>${num0(a.oi)}</td><td>${quoteAges(a)}</td><td class="wrap">${a.warnings ? flagsHtml(a.flags.filter(f => f.severity === "warn"), false) : "<span class='mut'>none</span>"}</td></tr>`).join("") + `</table></div>`;
+}
+
+// why the contracts of this side that were NOT offered were ruled out: every Avoid finding, in the backend's words
+function ruledOutBlock(o, side, open) {
+  const mine = o.contracts.filter(c => c.kind === side), bad = mine.filter(c => c.blocking).sort((a, b) => (a.steps_from_atm ?? 99) - (b.steps_from_atm ?? 99) || String(a.expiry).localeCompare(String(b.expiry)));  // nearest the money first, as the backend orders them
+  if (!bad.length) return `<div class="mut" style="margin-top:6px">No ${side} contract is ruled out.</div>`;
+  return `<details class="more" data-key="opt-ruled"${open || OPEN.has("opt-ruled") ? " open" : ""}><summary>${bad.length} of ${mine.length} ${side} contracts ruled out (Avoid): why</summary>` +
+    bad.map(c => `<div class="why sev-avoid">⛔ ${esc(c.symbol)} <span class="mut">${esc(c.expiry)} · strike ${c.strike}</span>: ${c.flags.filter(f => f.severity === "avoid").map(f => esc(f.text)).join("; ")}</div>`).join("") + `</details>`;
+}
+
+function renderOptions(o) {
+  if (!o || !o.available) {
+    setHtml("opt-head", esc(o && o.reason ? o.reason : "options analysis not available yet"));
+    for (const id of ["opt-sel", "opt-exp", "opt-win", "opt-info"]) setHtml(id, "");
+    setHtml("opt-table", "");
+    return;
+  }
+  const s = o.selection, d = o.decision || {}, offer = contractOffer(o);
+  setHtml("opt-head", `<span>NIFTY spot <b class="${o.spot_fresh ? "" : "stale"}">${n2(o.spot)}</b> <span class="mut">${o.spot_age == null ? "no tick" : AGE(o.spot_age) + " old"}${o.spot_fresh || !o.live ? "" : " — STALE"}</span></span>` +
+    `<span>Phase 3 decision <b>${esc(d.action || "–")}</b></span><span>Option side <b>${esc(offer.side && offer.agree ? offer.side : "none")}</b></span><span class="mut">${esc(d.headline || "")}</span>` +
+    (d.strategy_name ? (/^BUY /.test(d.action || "") ? `<span>From <b>${esc(d.strategy_name)}</b>` : `<span class="mut">Setup in view (not a BUY, so no contract): <b>${esc(d.strategy_name)}</b>`) +
+      `${d.setup_id ? ` <span class="mut" title="the setup the decision is about">setup ${esc(d.setup_id)}</span>` : ""}</span>` : "") +
+    ((d.also || []).length ? `<span class="mut">also matches: ${d.also.map(esc).join(", ")}</span>` : ""));
+  let sel;
+  if (offer.ok) {
+    const c = offer.contract;
+    sel = `<div class="panel card ${offer.side.toLowerCase()}" style="margin-bottom:6px"><h3>${isStale() ? "Last selected contract <span class=\"stale\" style=\"text-transform:none;letter-spacing:0\">STALE since " + hhmm(LAST) + ": not current, not actionable</span>" :
+      "Selected contract <span class=\"mut\" style=\"text-transform:none;letter-spacing:0\">the market data does not rule it out; this is not a recommendation or a prediction</span>"}</h3>` +
+      `<div class="selhead"><span class="big ${offer.side === "CE" ? "up" : "down"}">${esc(c.kind)} ${c.strike}</span><span><b>${esc(c.moneyness || "–")}</b>${c.steps_from_atm ? " · " + c.steps_from_atm + " strike(s) from ATM" : ""}` +
+        ` · ${c.distance_points == null ? "–" : (c.distance_points >= 0 ? "+" : "") + c.distance_points.toFixed(0) + " pts from the spot"}</span>` +
+        `<span>expiry <b>${esc(c.expiry)}</b> (${c.days_to_expiry} day(s)${c.expiry_day ? ", <b class='sev-warn'>EXPIRES TODAY</b>" : ""})</span><span class="mut">${esc(c.symbol)}</span></div>` +
+      originLine(d) +
+      `<div class="kv six">` +
+        kv("LTP", n2(c.ltp)) + kv("Bid × units", `${n2(c.bid)} × ${num0(c.bid_qty)}`) + kv("Ask × units", `${n2(c.ask)} × ${num0(c.ask_qty)}`) +
+        kv("Spread", c.spread == null ? "–" : `${n2(c.spread)} (${c.spread_pct.toFixed(2)}% of mid)`) + kv("Lot size", `1 lot = ${c.lot_size ?? "–"} units`) +
+        kv("Prev close", `${n2(c.prev_close)}${c.change == null ? "" : " (" + (c.change >= 0 ? "+" : "") + c.change.toFixed(2) + ")"}`) +
+        kv("Day volume (units)", num0(c.volume)) + kv("Open interest (units)", num0(c.oi)) +
+        kv("Freshness", esc(String(c.freshness).toUpperCase()), FRESH_CLS[c.freshness] || "") +
+        kv("Quote age: received", AGE(c.receipt_age), "", "how long ago Prism received the last message for this contract") +
+        kv("Quote age: exchange time", c.exchange_status === "unknown" ? "unknown" : AGE(c.exchange_age), c.exchange_status === "fresh" ? "" : "flat", "the exchange's own time for the quote: a message received a moment ago can carry an old one") +
+        kv("Last-trade age", AGE(c.last_trade_age), "", "shown only: a last trade says nothing about the order book") + `</div>` +
+      `<div class="fresh-strip">quote ${freshnessWords(c, true)}</div>` +
+      (c.flags.length ? `<div style="margin-top:6px"><b>Suitability findings</b> <span class="mut">(a Warn is shown and does not block; an Avoid would have kept this contract from being selected)</span></div>` + flagsHtml(c.flags, true) :
+        `<div class="mut" style="margin-top:6px">No suitability warnings.</div>`) +
+      s.why.map(w => `<div class="why mut">${esc(w)}</div>`).join("") +
+      (s.alternatives.length ? alternativesTable(s.alternatives) : `<div class="mut" style="margin-top:6px">No alternative contracts.</div>`) + ruledOutBlock(o, offer.side, false) + `</div>`;
+  } else {
+    const bad = offer.conflict ? `<div class="warnbox">⚠ The options data offers a contract, but the final decision is <b>${esc(offer.final || "not available")}</b>${offer.final && !offer.agree ? ` (the options payload says ${esc(d.action || "nothing")})` : ""}: ` +
+      `no contract is shown as selected.</div>` : "";
+    const info = offer.side ? "" : `<div class="mut">Final decision: <b>${esc(offer.final || d.action || "not available")}</b>${d.headline ? " — " + esc(d.headline) : ""}. Everything below is for information only: nothing in it is selected, and none of it is actionable.</div>`;
+    sel = `<div class="panel card" style="margin-bottom:6px"><h3>No contract selected <span class="mut" style="text-transform:none;letter-spacing:0">${offer.side ? "" : "informational: only a BUY CE / BUY PE decision selects a contract"}</span></h3>${bad}` +
+      `<div><b>${esc(offer.conflict ? "no options selection: the final decision does not call for a contract" : s.notice)}</b></div>${info}` +
+      (offer.side && offer.agree ? ruledOutBlock(o, offer.side, true) : "") + `</div>`;
+  }
+  setHtml("opt-sel", sel);
+  setHtml("opt-info", offer.ok ? "" : " — informational: no contract is selected");
+  setHtml("opt-exp", o.expiries.map(e => `<div class="mut">Expiry <b>${esc(e.expiry)}</b>: ${e.days_to_expiry} day(s)` +
+    `${e.expiry_day ? ` — <b class="sev-warn">EXPIRY DAY: time decay is fastest; premiums can fall quickly even if NIFTY does not move</b>` : e.decay_warning ? ` — <span class="sev-warn">time decay accelerates close to expiry</span>` : ""}</div>`).join(""));
+  const kinds = offer.side && offer.agree ? [offer.side] : ["CE", "PE"];
+  let r = "<tr><th>Expiry</th><th class='l'>Side</th><th>Strike</th><th class='l'>Class</th><th>LTP</th><th>Bid × units</th><th>Ask × units</th><th>Spread</th><th title='the day total, in units: a multiple of the lot size'>Volume (units)</th><th title='in units: a multiple of the lot size'>Open interest (units)</th><th class='l' title='STATUS, then the receipt age (when Prism got the message), the exchange-time age (the exchange own time for the quote) and the last-trade age'>Freshness: receipt / exchange / last trade</th><th class='l'>Findings</th></tr>";
+  const chosen = offer.contract ? offer.contract.token : null;
+  for (const c of o.contracts.filter(c => kinds.includes(c.kind))) {
+    r += `<tr class="${c.token === chosen ? "opt-sel" : c.blocking ? "opt-avoid" : ""}"><td class="l">${esc(c.expiry)} (${c.days_to_expiry}d)</td><td class="l">${esc(c.kind)}</td><td>${c.strike}</td><td class="l">${esc(c.moneyness || "–")}${c.steps_from_atm ? " " + c.steps_from_atm : ""}</td>` +
+      `<td>${n2(c.ltp)}</td><td>${n2(c.bid)} × ${num0(c.bid_qty)}</td><td>${n2(c.ask)} × ${num0(c.ask_qty)}</td>` +
+      `<td>${c.spread == null ? "–" : n2(c.spread) + " (" + c.spread_pct.toFixed(2) + "%)"}</td><td>${num0(c.volume)}</td><td>${num0(c.oi)}</td>` +
+      `<td class="wrap"><b class="${FRESH_CLS[c.freshness] || ""}">${esc(String(c.freshness).toUpperCase())}</b><br><span class="mut" style="white-space:nowrap">receipt ${AGE(c.receipt_age)} · exchange ${c.exchange_status === "unknown" ? "unknown" : AGE(c.exchange_age)} · trade ${AGE(c.last_trade_age)}</span></td><td class="wrap">${flagsHtml(c.flags, false)}</td></tr>`;
+  }
+  setHtml("opt-table", r);
+  const w = o.window;
+  setHtml("opt-win", w ? `Watching ${w.contracts} option contracts around ATM ${w.center} (first expiry ${esc(w.primary)}); the strikes follow the spot. ` +
+    (w.events.length ? "Last re-centred: " + w.events.map(e => `${fmtT(e.time)} ${esc(e.reason)}`).join(" · ") : "Not re-centred since selection.") +
+    ` Thresholds (OPTIONS_* variables): spread warn ${o.settings.warn_spread_pct}% / max ${o.settings.max_spread_pct}%, min volume ${num0(o.settings.min_volume)} units, a quote received more than ${o.settings.quote_stale_seconds} s ago, or whose exchange time is more than ${o.settings.exchange_stale_seconds} s old, is stale. They are placeholders to tune.` : "");
+}
+
+// ================= analysis =================
+const PATTERN = {HH_HL: "higher highs, higher lows", LH_LL: "lower highs, lower lows", mixed: "mixed swings", insufficient: "not enough swings"};
+
+function techTable(a) {
+  let r = "<tr><th>TF</th><th class='l'>Trend</th><th>EMA20</th><th>EMA50</th><th>RSI</th><th>ADX</th><th>+DI</th><th>-DI</th><th>ATR</th><th class='l'>Break</th></tr>";
+  for (const tf of ["1h", "15m", "5m", "1m"]) {
+    const t = a.timeframes[tf];
+    r += `<tr><td>${LABEL[tf]}</td><td class="l ${cls(t.trend)}">${arrow(t.trend)} ${esc(t.trend)}${t.warm ? "" : " (warming up)"}</td><td>${n2(t.ema20)}</td><td>${n2(t.ema50)}</td><td>${n1(t.rsi14)}</td>` +
+      `<td>${n1(t.adx)}</td><td>${n1(t.plus_di)}</td><td>${n1(t.minus_di)}</td><td>${n2(t.atr14)}</td><td class="l">${esc(t.breakout ?? "–")}</td></tr>`;
+  }
+  return `<div class="scroll"><table class="t">${r}</table></div>`;
+}
+
+function structureBlock(a) {
+  const f = x => x ? `${n2(x.price)} <span class="mut">(${fmtDT(x.start)})</span>` : "–";
+  let r = "<tr><th>TF</th><th class='l'>Pattern</th><th class='l'>Last swing high</th><th class='l'>Last swing low</th><th class='l'>Consolidation</th></tr>";
+  for (const tf of ["1h", "15m", "5m", "1m"]) {
+    const t = a.timeframes[tf], st = t.structure || {}, sw = st.recent_swings || [];
+    const last = k => [...sw].reverse().find(x => x.kind === k);
+    r += `<tr><td>${LABEL[tf]}</td><td class="l">${esc(PATTERN[st.pattern] || st.pattern || "–")}${t.consolidation ? " · range" : ""}</td><td class="l">${f(last("H"))}</td><td class="l">${f(last("L"))}</td>` +
+      `<td class="l">${t.consolidation ? n2(t.consolidation.low) + " – " + n2(t.consolidation.high) : "–"}</td></tr>`;
+  }
+  const hl = ["1h", "15m", "5m"].map(tf => { const sw = ((a.timeframes[tf].structure || {}).recent_swings || []);
+    return `<div class="mut">${LABEL[tf]} recent swings: ${sw.map(x => (x.kind === "H" ? "high " : "low ") + n2(x.price)).join(" · ") || "–"}</div>`; }).join("");
+  return `<div class="scroll"><table class="t">${r}</table></div>${hl}`;
+}
+
+function levelsBlock(a, t) {
+  const ref = a.reference, pd = ref.previous_day, lv = a.levels, fmtL = l => l.map(x => n2(x.price) + " (x" + x.touches + ")").join(", ") || "–";
+  const se = t && t.session, orr = se && se.opening_range;
+  return `<div>Previous day${pd ? " (" + esc(pd.date) + (pd.stale ? ", <span class='flat'>stale</span>" : "") + ")" : ""}: ` +
+      (pd ? `PDH <b>${n2(pd.pdh)}</b> · PDL <b>${n2(pd.pdl)}</b> · PDC <b>${n2(pd.pdc)}</b>` : "<span class='mut'>not available</span>") + `</div>` +
+    `<div>Opening range: ${orr ? `<b>${n2(orr.low)} – ${n2(orr.high)}</b>${orr.complete ? "" : " (forming)"}` : "<span class='mut'>not available</span>"}</div>` +
+    `<div>Session ${esc(ref.session_date ?? "–")}: open <b>${n2(ref.session_open)}</b> · ` +
+      (ref.vwap != null ? `VWAP <b>${n2(ref.vwap)}</b>`
+        : `VWAP not available <span class="mut">(${esc(ref.vwap_note || "no volume")})</span> · session average price (not a VWAP) <b>${n2(ref.session_avg_price)}</b>`) + `</div>` +
+    `<div><span class="down">Resistance</span> ${fmtL(lv.resistance)} &nbsp;·&nbsp; <span class="up">Support</span> ${fmtL(lv.support)}</div>`;
+}
+
+function candleBlock(s, a) {
+  let r = "<tr><th>TF</th><th class='l'>Trend</th><th title='missing intervals: latest session / whole window'>Missing</th><th class='l'>Last completed</th><th class='l'>Forming</th></tr>";
+  for (const tf of ["1h", "15m", "5m", "1m"]) {
+    const t = a.timeframes[tf], lc = t.last_completed, f = a.forming[tf], m = t.missing;
+    r += `<tr><td>${LABEL[tf]}</td><td class="l">${esc(t.trend)}</td><td class="${m.latest_session_missing ? "partial" : "mut"}">${m.latest_session_missing} / ${m.missing}</td>` +
+      `<td class="l">${lc ? fmtDT(lc.start) + " C " + n2(lc.close) : "–"}</td><td class="l">${f ? fmtDT(f.start) + " C " + n2(f.close) + (f.partial ? " (partial)" : "") : "–"}</td></tr>`;
+  }
+  let rows = "<tr><th>Role</th><th>TF</th><th>Start</th><th>Open</th><th>High</th><th>Low</th><th>Close</th><th>Vol</th><th>Ticks</th><th class='l'>Last closed</th></tr>";
+  for (const i of s.instruments) for (const tf of TFS) {
+    if (!i.candles[tf]) continue;  // the strikes further from the money are analysed in Options, not charted
+    const {current: k, last_closed: l} = i.candles[tf];
+    const flag = k && k.partial ? ' <span class="partial" title="partial: data gap or app started mid-candle">partial</span>' : "";
+    rows += k
+      ? `<tr><td>${esc(i.role)}</td><td>${tf}</td><td>${fmtT(k.start, false)}${flag}</td><td>${px(k.open)}</td><td>${px(k.high)}</td><td>${px(k.low)}</td><td>${px(k.close)}</td><td>${k.volume ?? "–"}</td><td>${k.ticks}</td>`
+      : `<tr><td>${esc(i.role)}</td><td>${tf}</td><td class="mut" colspan="7">no candle yet</td>`;
+    rows += l ? `<td class="l">${fmtT(l.start, false)} C ${px(l.close)}${l.partial ? ' <span class="partial">partial</span>' : ""}${l.source === "history" ? " (hist)" : ""}</td></tr>` : "<td class='mut l'>–</td></tr>";
+  }
+  const h = a.history || {}, cov = Object.entries(h.coverage || {}).map(([tf, x]) => `${esc(tf.toUpperCase())} ${x.bars} candles (${fmtDT(x.first)} → ${fmtDT(x.last)})`).join(" · ");
+  return `<div class="scroll"><table class="t">${r}</table></div><div class="mut" style="margin:6px 0">Live candles (current forming / last closed)</div><div class="scroll"><table class="t">${rows}</table></div>` +
+    `<div class="lv mut" style="margin-top:6px"><div>Historical data: <b>${esc(h.state)}</b>${h.error ? ` — <span class="flat">${esc(h.error)}</span>` : ""}</div>` +
+    `<div>Last successful refresh: ${h.loaded_at ? fmtD(h.loaded_at) + " IST (for session " + esc(h.as_of_date) + ")" : "none yet"}${h.stale ? ` — <span class="flat">not refreshed for today's session</span>` : ""}</div><div>Coverage: ${cov || "–"}</div></div>`;
+}
+
+// ---- strategy analysis: ALL ten strategies, each expandable, each side (CE call / PE put) on its own. Everything shown is the backend's: the scanner's own note per side (never merged),
+// the live setup's trigger, entry zone, invalidation, expiry wording, evidence and blockers, and the last ended setup. Nothing is calculated here. ----
+const SIDE_LONG = {CE: "CE (call)", PE: "PE (put)"};
+const AUTO = new Set();  // strategies that were opened by themselves once, because they hold a live setup: after that the open / closed state is the reader's
+let FOCUS = null;        // a strategy to scroll to once the Analysis tab has been drawn (the link from the Overview's monitor)
+function openStrategy(id) { OPEN.add("a-strat"); if (id) { OPEN.add("sd-" + id); FOCUS = "sd-" + id; } }
+
+// the extra evidence of the one counter-trend strategy: the weakening trend, the 15M structural reversal, the 5M confirmation and the permission, granted or denied and why
+function reversalEvidence(t) {
+  const rf = t.market && t.market.regime_facts, wk = rf && rf.facts ? rf.facts.weakening_trend : null;
+  const cts = (t.counter_trend || []).filter(c => c.strategy === "trend_exhaustion_reversal");
+  const mine = t.setups.filter(x => x.strategy === "trend_exhaustion_reversal");
+  const five = mine.length ? mine.map(x => `<div class="why ${x.candle_confirmed ? "up" : "mut"}">${esc(x.direction)} · 5M confirmation: ${x.candle_confirmed ? "a completed 5M candle has closed through the trigger" : "not yet: " + esc(x.confirm_text)}</div>`).join("") :
+    `<div class="why mut">5M confirmation: nothing to confirm yet: no setup exists until the 15M structural change has been confirmed</div>`;
+  return `<div class="side"><b>Reversal evidence</b> <span class="mut">(Trend Exhaustion Reversal)</span>` +
+    `<div style="margin-top:3px"><b>Weakening trend</b> <span class="mut">(regime fact: ${esc(wk ? wk.state : "unknown")}${wk ? " — " + esc(wk.summary) : ""})</span></div>${wk ? checkLines(wk.checks) : "<div class='why mut'>not available</div>"}` +
+    `<div style="margin-top:3px"><b>15M structural reversal and the counter-trend permission</b> <span class="mut">(every check: Counter-trend permission section)</span></div>` +
+    (cts.length ? cts.map(c => `<div class="why ${c.granted ? "up" : "flat"}"><b>${esc(c.side)}</b>: permission ${c.granted ? "GRANTED" : "DENIED"} — ${esc(c.reason)}</div>` +
+      checkLines((c.checks || []).filter(q => q.ok !== true)) + (c.structure ? `<div class="why mut">${esc(structureLine(c.structure, c.side))}</div>` : "")).join("") : "<div class='why mut'>nothing to decide: there is no established trend or extension to reverse</div>") +
+    `<div style="margin-top:3px"><b>5M confirmation</b></div>${five}</div>`;
+}
+
+function strategyDetail(z, t) {
+  const key = "sd-" + z.id, sides = z.sides || [];
+  const live = t.setups.filter(x => x.strategy === z.id);
+  if (live.length && !AUTO.has(key)) { AUTO.add(key); OPEN.add(key); }
+  const pill = sd => `<span class="pillst ${sd.applicable || sd.setup_id ? "" : "mut"}" title="${esc(sd.note || "")}">${esc(sd.side)} <span class="st st-${esc(sd.state)}">${esc(stateWord(sd.state))}</span></span>`;
+  const sideBlock = sd => {
+    const x = live.find(l => l.direction === sd.side), ended = (t.recent || []).find(r => r.strategy === z.id && r.direction === sd.side);
+    return `<div class="side ${esc(sd.side.toLowerCase())}"><b>${esc(SIDE_LONG[sd.side] || sd.side)}</b> <span class="pillst ${sd.applicable || sd.setup_id ? "" : "mut"}"><span class="st st-${esc(sd.state)}">${esc(stateWord(sd.state))}</span></span>` +
+      (x ? setupCard(x, true) : sd.note ? `<div class="why flat">${sd.applicable ? "no setup" : "not applicable"}: ${esc(sd.note)}</div>` : sd.scanned ? `<div class="mut">no setup</div>` : `<div class="mut">not scanned: the market is closed or has not opened</div>`) +
+      (ended ? `<div class="why mut">last ended today: <span class="st st-${esc(ended.status)}">${esc(ended.status.toLowerCase())}</span> — ${esc(ended.note)}</div>` : "") + `</div>`;
+  };
+  return `<details class="sd" data-key="${esc(key)}"${OPEN.has(key) ? " open" : ""}><summary><span class="nm">${esc(z.name)}</span><span>${sides.map(pill).join(" ")}</span><span class="sn" title="${esc(z.why)}">${esc(z.why)}</span></summary>` +
+    `<div class="sdbody"><div class="mut"><b>Market conditions:</b> ${esc(z.why)} <span class="mut">· id <code>${esc(z.id)}</code></span></div>${sides.map(sideBlock).join("")}${z.id === "trend_exhaustion_reversal" ? reversalEvidence(t) : ""}</div></details>`;
+}
+
+function strategyAnalysis(t) {
+  const d = t.decision, m = t.market, context = [];
+  if (m && m.gap) context.push(`opened ${m.gap.points >= 0 ? "+" : ""}${m.gap.points.toFixed(0)} pts (${m.gap.percent.toFixed(2)}%) from the previous close`);
+  if (m && m.atr) context.push(`candle size ATR5 ${atrNote(m.atr["5m"])}, ATR15 ${atrNote(m.atr["15m"])}`);
+  if (t.data) context.push(`data ${t.data.ok ? "complete" : "<b class='flat'>incomplete</b>"} · price age ${t.data.price_age == null ? "–" : t.data.price_age.toFixed(1) + " s"}`);
+  return `<div class="mut" style="margin-bottom:4px">Every strategy, each side on its own: a strategy that holds a live setup opens by itself. The CE and PE reasons are never merged.</div>` +
+    (t.strategies.length ? t.strategies.map(z => strategyDetail(z, t)).join("") : "<div class='mut'>no strategy data</div>") +
+    `<div style="margin-top:6px"><b>${esc(d.headline)}</b></div>` +
+    d.reasons.map(q => `<div class="why up" style="margin-left:12px">+ ${esc(q)}</div>`).join("") + d.against.map(q => `<div class="why flat" style="margin-left:12px">− ${esc(q)}</div>`).join("") +
+    ((d.also || []).length ? `<div class="mut" style="margin-left:12px">also matches: ${d.also.map(esc).join(", ")}</div>` : "") +
+    (m ? `<div class="mut" style="margin-left:12px">${esc(m.text)}</div>` : "") + (context.length ? `<div class="mut" style="margin-left:12px">${context.join(" · ")}</div>` : "");
+}
+
+const STAGE_MARK = {done: ["✓", "up"], active: ["…", "flat"], retrying: ["↻", "flat"], pending: ["○", "neu"], failed: ["✗", "down"], warn: ["!", "flat"]};
+const dur = sec => sec == null ? "–" : sec < 120 ? sec.toFixed(0) + " s" : sec < 7200 ? (sec / 60).toFixed(0) + " min" : (sec / 3600).toFixed(1) + " h";
+
+// the start-up as stages, and the numbers an operator needs when something is slow: what is done, what is running, what is being retried and when
+function readinessBlock(h) {
+  const rd = h.readiness, dg = h.diagnostics;
+  if (!rd) return "";
+  const hs = rd.history || {}, cd = rd.candles || {};
+  const miss = o => Object.entries(o || {}).map(([tf, n]) => `${esc(tf.toUpperCase())} ${esc(n)}`).join(", ") || "none";
+  return `<div class="bar" style="margin-bottom:6px"><span><b class="${rd.ready ? "up" : rd.state === "FAILED" ? "down" : "flat"}">${esc(rd.state.replace(/_/g, " "))}</b></span>` +
+      `<span>${esc(rd.summary)}</span><span>Decisions permitted <b class="${rd.decisions_permitted ? "up" : "flat"}">${rd.decisions_permitted ? "yes" : "no"}</b></span></div>` +
+    `<div class="scroll"><table class="t"><tr><th class="l">Start-up stage</th><th class="l">Status</th><th class="l wrap">Detail</th></tr>` +
+    (rd.stages || []).map(g => { const m = STAGE_MARK[g.status] || ["?", ""]; return `<tr><td class="l">${esc(g.label)}</td><td class="l ${m[1]}">${m[0]} ${esc(g.status)}</td><td class="l wrap">${esc(g.detail || "")}</td></tr>`; }).join("") + `</table></div>` +
+    `<div class="kv four" style="margin:8px 0">` +
+      kv("Uptime", dg ? dur(dg.uptime_seconds) : "–") + kv("Process", dg && dg.instance ? esc(String(dg.instance.pid)) : "–", "", "the one Prism running on this PC") +
+      kv("History refresh", `${hs.attempts || 0} / ${hs.max_attempts || "–"} attempts`, "", hs.error || "") +
+      kv("Last successful refresh", hs.last_success ? fmtD(hs.last_success) : "none yet") +
+      kv("Next retry", hs.next_try_in == null ? "–" : dur(hs.next_try_in), "", hs.error_kind ? "last failure: " + hs.error_kind : "") +
+      kv("Missing today", miss(cd.missing_today), Object.keys(cd.missing_today || {}).length ? "flat" : "up") +
+      kv("In decision window", miss(cd.missing_in_decision_window), Object.keys(cd.missing_in_decision_window || {}).length ? "down" : "up", "5M and 15M candles Phase 3 needs complete") +
+      kv("Last recovery attempt", dg && dg.last_recovery_attempt ? fmtT(dg.last_recovery_attempt) : "none") +
+      kv("Unavailable after retries", String(cd.unavailable_after_retries || 0), cd.unavailable_after_retries ? "down" : "") + kv("Background tasks", dg ? esc((dg.background_tasks || []).join(", ") || "none") : "–") +
+      kv("Reconnects", dg ? String(dg.reconnects) : "–") + kv("Last NIFTY tick", dg && dg.last_spot_tick_age != null ? dur(dg.last_spot_tick_age) + " ago" : "none") + `</div>`;
+}
+
+function healthDetail(s, h) {
+  const f = h.feed || {}, r = h.recovery || {}, tm = h.time, v = h.validation, c = s.connection;
+  const ev = e => `${fmtT(e.time)} ${esc(e.kind)}: ${esc(e.message || e.reason)}${e.attempt ? " (attempt " + e.attempt + ")" : ""}`;
+  const rej = Object.entries(c.ticks_rejected).map(([k, n]) => esc(k) + ":" + esc(n)).join(" ") || "0";
+  return `<div class="lv" id="dh">${readinessBlock(h)}<div class="scroll"><table class="t"><tr><th>Instrument</th><th class='l'>Symbol</th><th class='l'>Status</th><th>Age</th><th>Limit</th><th>Exchange time</th><th>Received</th></tr>` +
+    (h.instruments || []).map(i => `<tr><td>${esc(i.role)}</td><td class="l">${esc(i.symbol)}</td><td class="l ${STATUS_CLS[i.status] || ""}">${esc(i.status)}</td><td>${AGE(i.age)}</td><td>${i.limit} s</td><td>${fmtT(i.exchange_time)}</td><td>${fmtT(i.received_time)}</td></tr>`).join("") + `</table></div>` +
+    `<div>Each instrument is judged by its own ticks: option quotes never make the NIFTY spot look fresh. Spot limit is the strategy's price age; option quotes are shown only (no decision uses them yet).</div>` +
+    `<div>Feed: <b>${esc(f.state)}</b>${f.state !== "connected" && f.reason ? ` — ${esc(f.reason)}` : ""}${f.state !== "connected" && f.attempt ? ` (attempt ${f.attempt})` : ""} · ticks ok ${c.ticks_accepted} · rejected ${rej} · reconnects ${c.reconnects} · last tick (any instrument) ${fmtT(c.last_tick_received)}</div>` +
+    ((f.events || []).length ? `<div class="mut">${f.events.map(ev).join("<br>")}</div>` : "") +
+    `<div>Clock: ${tm ? (tm.trusted ? "<span class='up'>trusted</span>" : `<b class="stale">NOT trusted: ${esc(tm.reason)}</b>`) : "<span class='mut'>not checked</span>"}</div>` +
+    (tm && tm.events.length ? `<div class="mut">${tm.events.map(ev).join("<br>")}</div>` : "") +
+    `<div>Candle recovery (NIFTY spot only): ${r.recovered || 0} candle(s) recovered in ${r.requests || 0} request(s), ${r.failures || 0} failed, ${r.pending_candles || 0} still pending` +
+      `${r.history_refreshing ? " · history refresh running" : ""}${r.deferred ? ` · stood aside ${r.deferred}×` : ""}${r.last_error ? ` · last failure: ${esc(r.last_error)}` : ""}</div>` +
+    `<div>Angel One candle API: ${r.api_requests || 0} request(s) through the shared limiter, ${r.refusals || 0} refused for rate${r.cooling_down ? ` — <b class="flat">cooling down ${r.cooldown_seconds.toFixed(0)} s</b>` : ""}${r.refusal_error ? ` · last refusal: ${esc(r.refusal_error)}` : ""}</div>` +
+    `<div>Official-candle check: ${v ? `${esc(v.date)} ${esc(v.status)}${v.file ? ` <span class="mut">(${esc(v.file)})</span>` : ""}<br>` + (v.lines || []).map(esc).join("<br>") : "<span class='mut'>runs once after the close (about 15:40) when live candles exist</span>"}</div></div>`;
+}
+
+function contractsTable(s) {
+  return `<div class="scroll"><table class="t"><tr><th>Role</th><th class='l'>Symbol</th><th>Expiry</th><th>Strike</th><th>LTP</th><th>Quote (receipt)</th><th>Receipt age</th><th>Day volume (units)</th><th>Exchange time</th><th>Received</th></tr>` +
+    s.instruments.map(i => `<tr><td>${esc(i.role)}</td><td class="l">${esc(i.symbol)}</td><td>${esc(i.expiry ?? "–")}</td><td>${i.strike ?? "–"}</td>` +
+      `<td>${px(i.ltp)}</td><td class="${STATUS_CLS[i.status] || ""}">${esc(i.status || "–")}</td><td>${AGE(i.age)}</td><td>${i.volume ?? "–"}</td><td>${fmtT(i.exchange_time)}</td><td>${fmtT(i.received_time)}</td></tr>`).join("") + `</table></div>`;
+}
+
+function renderAnalysisTab(s, h) {
+  const a = s.analysis || {available: false}, t = s.trading;
+  let html = (a.warnings || []).map(w => `<div class="warnbox">⚠ ${esc(w)}</div>`).join("");
+  if (!a.available) {
+    html += `<div class="panel mut" style="margin-bottom:6px">Analysis not available yet (${esc((a.history || {}).state || "loading")}).</div>`;
+  } else {
+    const c = a.condition;
+    html += `<div class="bar"><span>Direction <b class="${cls(c.trend)}">${arrow(c.trend)} ${esc(c.trend.toUpperCase())}</b></span><span>Volatility <b>${esc(c.volatility)}</b></span>` +
+      `<span title="${esc(c.alignment.text)}">Timeframes <b>${esc(c.alignment.label.replace(/_/g, " "))}</b></span>` +
+      `<span class="mut">completed candles only; the forming candle is shown separately</span>` +
+      (a.reliable ? `<span class="up">data complete</span>` : `<span class="flat">⚠ incomplete data — see warnings</span>`) + `</div>`;
+  }
+  // what the decision is made of comes first: the regime facts, the counter-trend permission, then every strategy; the indicator tables, which are read less often, follow
+  if (t) {
+    html += sec("a-regime", "Market regime facts", regimeBlock(t.market && t.market.regime_facts), "strong or weakening trend, compression, expansion, extension, range / pause / pullback / breakout") +
+      sec("a-ct", "Counter-trend permission", `<div class="mut" style="margin-bottom:4px">Only Trend Exhaustion Reversal may trade against the 1H or 15M trend, and only after a confirmed 15M structural reversal; a 5M break is still required, and every other check still applies. Granted or denied, it is recorded here and in the journal.</div>` +
+        ((t.counter_trend || []).map(permissionBlock).join("") || "<div class='mut'>Nothing to decide: there is no established trend or extension to reverse.</div>"), "granted or denied, and the structure behind it") +
+      sec("a-strat", "Strategy analysis: all ten strategies", strategyAnalysis(t), "each side on its own: state, trigger, entry zone, invalidation, expiry, evidence, blockers") +
+      sec("a-setups", "Ended setups", t.recent.length ? t.recent.map(x => `<div>${esc(x.direction)} ${esc(x.strategy_name)}: <span class="st st-${esc(x.status)}">${esc(x.status.toLowerCase())}</span> — <span class="mut">${esc(x.note)}</span></div>`).join("") : "<div class='mut'>none today</div>", "live setups are under their strategy above"),
+      sec("a-confirm", "Confirmation, invalidation and blockers", explainBlock(t.explain) || "<div class='mut'>none</div>", "what happened, what is happening, what is next");
+  }
+  if (a.available) {
+    html += sec("a-tech", "Technical analysis: 1H · 15M · 5M · 1M", `<div class="mut" style="margin-bottom:4px">${a.condition.reasons.map(esc).join("<br>")}</div>` + techTable(a), "trend, EMA20 / EMA50, RSI, ADX / DI, ATR, breakout") +
+      sec("a-struct", "Market structure", structureBlock(a), "swing highs and lows, higher highs / lower lows, consolidation") +
+      sec("a-levels", "Support, resistance and reference levels", `<div class="lv">${levelsBlock(a, t)}</div>`, "previous day, opening range, session") +
+      sec("a-candles", "Candle information", candleBlock(s, a), "last completed, forming, missing, coverage");
+  }
+  html += sec("a-health", "Data health detail", healthDetail(s, h), "feed, clock, candle recovery, official-candle check") +
+    sec("a-contracts", "Instruments and contracts", contractsTable(s), "each instrument's own quote, exchange time and receipt time") +
+    sec("a-gaps", "Data gaps and errors", `<div class="mut"><b>Gaps</b><br>${s.gaps.length ? s.gaps.map(g => `${fmtT(g.start)} → ${g.end ? fmtT(g.end) + " (" + Math.round(g.end - g.start) + "s)" : (g.ended_by ? g.ended_by : "ongoing")} · ${esc(g.reason)}`).join("<br>") : "none"}</div>` +
+      `<div class="mut" style="margin-top:6px"><b>Errors</b><br>${s.errors.length ? s.errors.slice().reverse().map(e => `<span class="err">${fmtT(e.time)}</span> ${esc(e.message)}`).join("<br>") : "none"}</div>`);
+  setHtml("analysis-body", html);
+  if (FOCUS) { const el = document.querySelector(`[data-key="${String(FOCUS).replace(/["\\]/g, "\\$&")}"]`); FOCUS = null; if (el && el.scrollIntoView) el.scrollIntoView({block: "start"}); }
+}
+
+// ================= journal =================
+const J = {data: null, key: null, loading: false, error: null};
+async function loadJournal() {
+  if (J.loading) return;
+  J.loading = true;
+  try {
+    const r = await fetch("/api/journal");
+    const body = await r.json();
+    // an older server that was started before the endpoint existed answers {"detail": "Not Found"}: say so instead of showing an empty journal
+    J.data = r.ok && typeof body.available === "boolean" ? body : {available: false, reason: "this Prism server has no journal endpoint yet (restart Prism to load the current version)", decisions: [], events: [], file: null, records: 0};
+    J.error = null;
+  } catch (e) { J.error = String(e); }
+  J.loading = false;
+  if (TAB === "journal" && LAST) renderJournalTab(LAST);
+}
+
+function renderJournalTab(s) {
+  const t = s.trading, d = J.data;
+  const key = t ? t.decision.headline + "|" + t.events.length + "|" + (t.events[0] ? t.events[0].seq : "") : "";
+  if (key !== J.key) { J.key = key; loadJournal(); }  // reloaded when the decision or a lifecycle event changes, not on a timer
+  const live = t ? t.events : [];
+  const events = d && d.available ? d.events : live;
+  let html = `<div class="bar"><span>Today's decision journal${d && d.file ? ` <span class="mut">(${esc(d.file)}, ${d.records} records)</span>` : ""}</span>` +
+    `<span class="mut">${!d ? (J.error ? "could not load: " + esc(J.error) : "loading…") : d.available ? "decision changes, setup lifecycle and explanations, newest first" : esc(d.reason) + ": showing the live events only"}</span>` +
+    (d && d.available && (d.bad_lines || d.unreadable_records) ? `<span class="flat" title="the file holds lines that are not records (a write cut short by a crash?): the review command says which, with --verify">⚠ ${(d.bad_lines || 0) + (d.unreadable_records || 0)} line(s) of the file could not be read and are not shown</span>` : "") +
+    `<button class="linkbtn" id="j-refresh">Refresh</button></div>`;
+  if (d && d.available) {
+    let r = "<tr><th>Time</th><th class='l'>Decision</th><th>NIFTY</th><th class='l'>Market</th><th class='l'>Strategy</th><th class='wrap'>Why</th></tr>";
+    for (const x of d.decisions.slice(0, 150)) {
+      r += `<tr><td>${fmtT(x.time)}</td><td class="l"><b class="${ACTION_CLS[x.action] === "buy-ce" ? "up" : ACTION_CLS[x.action] === "buy-pe" ? "down" : ACTION_CLS[x.action] === "wait" ? "flat" : "neu"}">${esc(x.action || "–")}</b> <span class="mut">${esc(x.reason || "")}</span></td><td>${n2(x.price)}</td>` +
+        `<td class="l ${cls(x.direction)}">${esc(x.direction || "–")}<span class="mut"> ${esc((x.regime || "").replace(/_/g, " "))}</span></td><td class="l">${esc(x.strategy_name || "–")}</td>` +
+        `<td class="wrap"><b>${esc(x.headline || "")}</b>${x.options ? ` <span class="mut">· option ${esc(x.options)}</span>` : ""}` +
+        x.reasons.map(q => `<div class="up" style="margin-left:10px">+ ${esc(q)}</div>`).join("") + x.against.map(q => `<div class="flat" style="margin-left:10px">− ${esc(q)}</div>`).join("") +
+        (x.counter_trend || []).filter(c => c.needed).map(c => `<div class="mut" style="margin-left:10px">⚑ counter-trend ${esc(c.side)} ${c.granted ? "granted" : "denied"}: ${esc(c.reason)}</div>`).join("") +
+        ((x.regime_active || []).length ? `<div class="mut" style="margin-left:10px">regime: ${x.regime_active.map(esc).join(" · ")}</div>` : "") + `</td></tr>`;
+    }
+    html += sec("j-decisions", "Decision history", `<div class="scroll"><table class="t">${r}</table></div>${d.decisions.length > 150 ? `<div class="mut">showing the latest 150 of ${d.decisions.length}</div>` : ""}${d.decisions.length ? "" : "<div class='mut'>no decision has been recorded today</div>"}`, "each change of decision, with the reasons for and against");
+  }
+  const byId = new Map();
+  for (const e of [...events].reverse()) { if (!byId.has(e.id)) byId.set(e.id, []); byId.get(e.id).push(e); }
+  let lc = "<tr><th class='l'>Setup</th><th class='l'>Strategy</th><th class='l'>Lifecycle</th><th class='l'>Now</th><th class='wrap'>Latest note</th></tr>";
+  for (const [, list] of [...byId.entries()].reverse()) {
+    const last = list[list.length - 1];
+    lc += `<tr><td class="l ${last.direction === "CE" ? "up" : "down"}">${esc(last.direction)}</td><td class="l">${esc(last.strategy_name)}</td><td class="l">${list.map(e => `<span class="st st-${esc(e.status)}">${esc(e.status.toLowerCase())}</span> ${fmtT(e.time, false)}`).join(" → ")}</td>` +
+      `<td class="l"><span class="st st-${esc(last.status)}">${esc(last.status.toLowerCase())}</span></td><td class="wrap">${esc(last.text)}</td></tr>`;
+  }
+  html += sec("j-lifecycle", "Setup lifecycle history", byId.size ? `<div class="scroll"><table class="t">${lc}</table></div>` : "<div class='mut'>no setup has been announced today</div>", "from detection to confirmation, expiry or invalidation");
+  const ended = events.filter(e => ["EXPIRED", "INVALIDATED", "MISSED"].includes(e.status));
+  html += sec("j-ended", "Expired and invalidated setups", ended.length ? ended.map(e => `<div>${fmtT(e.time, false)} <b class="${e.direction === "CE" ? "up" : "down"}">${esc(e.direction)}</b> ${esc(e.strategy_name)} <span class="st st-${esc(e.status)}">${esc(e.status.toLowerCase())}</span> — <span class="mut">${esc(e.text)}</span></div>`).join("") : "<div class='mut'>none today</div>", `${ended.length} today`);
+  html += sec("j-events", "Full strategy events", events.length ? `<div class="scroll"><table class="t"><tr><th>Time</th><th class='l'>Setup</th><th class='l'>Strategy</th><th class='l'>Status</th><th class='wrap'>What happened</th></tr>` +
+    events.map(e => `<tr><td>${fmtT(e.time)}</td><td class="l ${e.direction === "CE" ? "up" : "down"}">${esc(e.direction)}</td><td class="l">${esc(e.strategy_name)}</td><td class="l"><span class="st st-${esc(e.status)}">${esc(e.status.toLowerCase())}</span></td><td class="wrap">${esc(e.text)}</td></tr>`).join("") + `</table></div>` : "<div class='mut'>no events today</div>", `${events.length} events`);
+  if (t) {
+    html += sec("j-explain", "Decision explanation (now)", explainBlock(t.explain) + `<div><b>${esc(t.decision.headline)}</b></div>` + t.decision.reasons.map(q => `<div class="why up" style="margin-left:12px">+ ${esc(q)}</div>`).join("") + t.decision.against.map(q => `<div class="why flat" style="margin-left:12px">− ${esc(q)}</div>`).join(""), "the plain-words explanation of the current decision");
+  }
+  html += sec("j-trades", "Manually recorded trades", `<div class="mut">Prism does not record trades: it places no orders and has no trade log, so there is nothing to show here. The journal above is the record of what Prism said and why.</div>`, "none");
+  setHtml("journal-body", html);
+}
+
+// ================= alerts: being told when something needs you, instead of having to watch =================
+// What raises one is decided by alertChanges() from two snapshots, so it can be checked without a browser. The first snapshot is the baseline and raises nothing, and a page showing
+// stale data raises nothing (a snapshot has to arrive). A sound needs one click on the page first (a browser rule); a popup needs the browser's permission, asked when you choose it.
+// "ready" is Prism's own READY_TO_ACT stage (confirmed, in the entry area, nothing blocking). Prism places no orders: an alert only says look now.
+const ALERT_MODES = ["sound + popup", "sound", "off"], BASE_TITLE = "Prism Market Data";
+let ALERT_MODE = "sound", ALERT_LOG = [], ALERT_MEMO = {}, UNSEEN = 0, AUDIO = null;
+try { const m = localStorage.getItem("prism-alert-mode"); if (ALERT_MODES.includes(m)) ALERT_MODE = m; } catch (e) { /* no storage (a private window): the default stands */ }
+const sideWord = d => d === "CE" ? "BUY CE" : d === "PE" ? "BUY PE" : String(d);
+function setupsById(s) { const m = {}; for (const x of (s && s.trading && s.trading.setups) || []) if (x && x.id != null) m[x.id] = x; return m; }
+// A setup's entry area flickers: in the real journal of 2026-11-11 one setup went READY_TO_ACT <-> CONFIRMED about 20 times in 7 minutes as price crossed its trigger. That is one piece of news, not twenty:
+// a setup that comes back to ready within REARM seconds of having been ready is the same entry area flickering, and a setup leaving the entry area (CONFIRMED) is not an alert at all (it is
+// on the page; it becomes one only if the setup then ends or is blocked). `memo` is what the page remembers between snapshots (when each setup was last ready, when each warning was last raised).
+const REARM = 300;
+function alertChanges(prev, cur, memo = {}) {
+  if (!cur) return [];
+  memo.ready = memo.ready || {}; memo.said = memo.said || {};
+  const stamp = cur.server_time, out = [], a = setupsById(prev), b = setupsById(cur);
+  const due = (table, key) => table[key] == null || stamp == null || stamp - table[key] >= REARM;
+  const readyBefore = {...memo.ready};  // (when each was last ready, before this snapshot)
+  for (const [id, x] of Object.entries(b)) if (x.stage === "READY_TO_ACT") memo.ready[id] = stamp;  // recorded even for the first snapshot, so a flicker right after opening the page is not news either
+  if (!prev) return [];
+  for (const [id, x] of Object.entries(b)) {
+    if (x.stage === "READY_TO_ACT" && !(a[id] && a[id].stage === "READY_TO_ACT") && due(readyBefore, id))
+      out.push({level: "act", key: "ready:" + id, title: `${sideWord(x.direction)} ready: ${x.strategy_name}`,
+        text: `setup ${id}: entry area ${zone(x.zone)}, trigger ${n2(x.trigger)}, invalidation ${n2(x.invalidation)}. You decide and place any order yourself.`});
+  }
+  for (const [id, x] of Object.entries(a)) {
+    const y = b[id];
+    if (x.stage !== "READY_TO_ACT" || (y && (y.stage === "READY_TO_ACT" || y.stage === "CONFIRMED"))) continue;
+    if (y && y.stage === "BLOCKED") { if (!due(memo.said, "blocked:" + id)) continue; memo.said["blocked:" + id] = stamp; }  // (an ended setup cannot come back, so only a block can repeat)
+    const why = !y ? "it has ended" : y.stage === "BLOCKED" ? `something blocks entry now${(y.blockers || [])[0] ? ": " + y.blockers[0] : ""}` : `it is now ${String(y.stage).replace(/_/g, " ").toLowerCase()}`;
+    out.push({level: "warn", key: "ended:" + id, title: `${sideWord(x.direction)} no longer ready: ${x.strategy_name}`, text: `setup ${id}: ${why}.`});
+  }
+  const ra = prev.health && prev.health.readiness, rb = cur.health && cur.health.readiness;
+  if (ra && rb && ra.ready && !rb.ready && due(memo.said, "readiness")) { memo.said.readiness = stamp; out.push({level: "warn", key: "readiness", title: "Prism is NOT READY", text: `${String(rb.state).replace(/_/g, " ")}: ${rb.summary}. Decisions are blocked.`}); }
+  if (ra && rb && !ra.ready && rb.ready) out.push({level: "info", key: "readiness", title: "Prism is ready again", text: String(rb.summary)});
+  const fa = prev.connection && prev.connection.state, fb = cur.connection && cur.connection.state;
+  if (fa === "connected" && fb && fb !== "connected" && cur.health && cur.health.live && due(memo.said, "feed")) { memo.said.feed = stamp; out.push({level: "warn", key: "feed", title: "Live feed lost", text: `the feed is ${String(fb).replace(/_/g, " ")}: no decision is current until it is back.`}); }
+  return out;
+}
+function audio() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!AUDIO) AUDIO = new AC();
+    if (AUDIO.state === "suspended") AUDIO.resume();
+    return AUDIO;
+  } catch (e) { return null; }
+}
+function beep(kind) {
+  const A = audio();
+  if (!A) return;
+  const tones = kind === "act" ? [[880, 0], [1175, .2], [880, .4], [1175, .6]] : kind === "warn" ? [[520, 0], [390, .22]] : [[660, 0]];
+  try {
+    for (const [f, at] of tones) { const o = A.createOscillator(), g = A.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.value = .2; o.connect(g); g.connect(A.destination); o.start(A.currentTime + at); o.stop(A.currentTime + at + .15); }
+  } catch (e) { /* the log below still shows it */ }
+}
+function popup(c) {
+  try { if (typeof Notification !== "undefined" && Notification.permission === "granted") new Notification(c.title, {body: c.text, tag: c.key, requireInteraction: c.level === "act"}); } catch (e) { /* the log below still shows it */ }
+}
+function setTitle() { document.title = (UNSEEN ? `(${UNSEEN}) ` : "") + BASE_TITLE; }
+function markSeen() { if (UNSEEN) { UNSEEN = 0; setTitle(); } }
+function renderAlertLog() {
+  if (!ALERT_LOG.length) { setHtml("alertlog", ""); return; }
+  const icon = {act: "🔔", warn: "⚠", info: "ℹ"};
+  setHtml("alertlog", `<div class="alertlog">${ALERT_LOG.slice(0, 5).map(x => `<div class="al ${esc(x.level)}"><span class="mut">${fmtT(x.t)}</span> ${icon[x.level] || ""} <b>${esc(x.title)}</b> ${esc(x.text)}</div>`).join("")}` +
+    `<button class="linkbtn" id="alert-clear" type="button">clear</button></div>`);
+}
+function raiseAlerts(list, snap) {
+  if (!list.length) return;
+  for (const c of list) ALERT_LOG.unshift({t: snap && snap.server_time, level: c.level, title: c.title, text: c.text});
+  ALERT_LOG.length = Math.min(ALERT_LOG.length, 20);
+  UNSEEN += list.length; setTitle(); renderAlertLog();
+  if (ALERT_MODE === "off") return;  // the log and the title still say it; only the sound and the popup are off
+  const top = list.some(c => c.level === "act") ? "act" : list.some(c => c.level === "warn") ? "warn" : "info";
+  if (top !== "info") beep(top);  // one sound per snapshot, however many things changed in it
+  if (ALERT_MODE === "sound + popup") for (const c of list) if (c.level !== "info") popup(c);
+}
+function renderAlertMode() {
+  const b = $("alert-mode");
+  if (!b) return;
+  b.textContent = "🔔 " + ALERT_MODE; b.className = "alertmode" + (ALERT_MODE === "off" ? " off" : "");
+  b.title = "Alerts: a sound (and a popup) when a setup becomes ready or stops being ready, or when Prism is not ready or the feed is lost. Click to change.";
+}
+function cycleAlertMode() {
+  ALERT_MODE = ALERT_MODES[(ALERT_MODES.indexOf(ALERT_MODE) + 1) % ALERT_MODES.length];
+  try { localStorage.setItem("prism-alert-mode", ALERT_MODE); } catch (e) { /* the choice lasts until the page is closed */ }
+  try { if (ALERT_MODE === "sound + popup" && typeof Notification !== "undefined" && Notification.permission === "default") Notification.requestPermission(); } catch (e) { /* no popups then */ }
+  if (ALERT_MODE !== "off") beep("info");  // so you hear that it works
+  renderAlertMode();
+}
+
+// ================= trades: what you actually did (a notebook and a calculator; nothing here places an order) =================
+let T = {data: null, error: null, loading: false, said: false};
+const rs = v => v == null ? "–" : "Rs " + Math.round(v).toLocaleString("en-IN");
+const detailText = b => b && typeof b.detail === "string" ? b.detail : JSON.stringify((b && b.detail) || b || "no answer");
+function tradeMsg(text, bad) { const e = $("t-msg"); if (e) { e.textContent = text; e.className = bad ? "err" : ""; } }
+async function sendJson(method, url, body) {
+  const r = await fetch(url, body === undefined ? {method} : {method, headers: {"content-type": "application/json"}, body: JSON.stringify(body)});
+  let b = null;
+  try { b = await r.json(); } catch (e) { /* no JSON: the status says it */ }
+  return {ok: r.ok, status: r.status, body: b};
+}
+async function loadTrades() {
+  if (T.loading) return;
+  T.loading = true;
+  try {
+    const r = await sendJson("GET", "/api/trades");
+    // a server started before this existed answers 404: say so instead of showing an empty notebook
+    T.data = r.ok && r.body && typeof r.body.available === "boolean" ? r.body : {available: false, reason: r.status === 404 ? "this Prism server has no trade log yet (restart Prism to load the current version)" : detailText(r.body), trades: [], open: []};
+    T.error = null;
+  } catch (e) { T.error = String(e); }
+  T.loading = false;
+  if (LAST) { if (TAB === "trades") drawTrades(); guard("alerts-line", () => renderAlerts(LAST.health || {issues: [], warnings: []})); }  // (drawn, not re-asked: a server that cannot answer must not be asked again in a loop)
+}
+function tradesHtml(d) {
+  if (!d) return T.error ? `<div class="warnbox">could not load the trades: ${esc(T.error)} <button class="linkbtn" id="t-refresh" type="button">Retry</button></div>` : `<div class="mut">loading…</div>`;
+  if (!d.available) return `<div class="warnbox">${esc(d.reason || "the trade log is not available")}</div>`;
+  const lim = d.limits || {}, used = d.daily_loss_used_pct;
+  let html = `<div class="panel"><h3>Today's trades <span class="mut" style="text-transform:none;letter-spacing:0">${esc(d.file)}</span></h3><div class="tstat">` +
+    `<span>Realised <b class="${d.realised > 0 ? "up" : d.realised < 0 ? "down" : ""}">${rs(d.realised)}</b></span>` +
+    `<span>Loss limit for the day <b>${lim.max_daily_loss ? rs(lim.max_daily_loss) : "not set"}</b>${used != null ? ` <span class="${d.daily_loss_reached ? "down" : used >= 75 ? "flat" : "mut"}">(${used.toFixed(0)}% used)</span>` : ""}</span>` +
+    `<span>Open <b>${(d.open || []).length ? d.open.map(o => `${esc(o.instrument)} ${o.qty} @ ${n2(o.average_price)}`).join("; ") : "nothing"}</b></span></div>` +
+    (d.daily_loss_reached ? `<div class="badbox">⛔ You have reached your own loss limit for the day (${rs(d.lost_today)} of ${rs(lim.max_daily_loss)}). Prism's decisions are unchanged: this limit is yours.</div>` : "");
+  if ((d.trades || []).length) {
+    html += `<div class="scroll"><table class="t"><tr><th>Time</th><th class="l">Side</th><th class="l">Instrument</th><th>Qty</th><th>Price</th><th>Sold</th><th>Result</th><th class="l">Prism said</th><th class="l">Note</th><th></th></tr>` +
+      d.trades.map(x => `<tr><td>${fmtT(x.t)}</td><td class="l"><b class="${x.side === "BUY" ? "up" : "down"}">${esc(x.side)}</b></td><td class="l">${esc(x.instrument)}</td><td>${x.qty}</td><td>${n2(x.price)}</td>` +
+        `<td>${x.side === "BUY" ? x.matched : ""}</td><td class="${(x.pnl || x.lot_pnl || 0) > 0 ? "up" : (x.pnl || x.lot_pnl || 0) < 0 ? "down" : ""}">${x.pnl != null ? rs(x.pnl) : x.lot_pnl != null && x.matched ? `<span class="mut" title="what the part of this buy that has been sold made">${rs(x.lot_pnl)}</span>` : ""}</td>` +
+        `<td class="l">${x.prism ? `${esc(x.prism.action || "–")}${x.prism.price != null ? ` <span class="mut">at ${n2(x.prism.price)}</span>` : ""}${x.followed ? ` <span class="${x.followed === "no" ? "flat" : "up"}">· followed Prism: ${esc(x.followed)}</span>` : ""}` : ""}</td>` +
+        `<td class="l mut">${esc(x.note || "")}${x.setup_id ? ` <span title="the setup you named">${esc(x.setup_id)}</span>` : ""}</td><td><button class="voidbtn" data-void="${esc(x.id)}" title="cancel this trade (the file is only added to: a line that cancels it)">void</button></td></tr>`).join("") +
+      `</table></div><div class="mut" style="margin-top:4px">${esc(d.basis)}. The Result column adds up to the realised figure: a sell carries the result of what it closed, a buy shows (grey) what its sold part made.</div>`;
+  } else html += `<div class="mut">no trade logged today</div>`;
+  return html + "</div>";
+}
+function drawTrades() { setHtml("trades-body", tradesHtml(T.data)); }
+function renderTradesTab(s) {
+  if (!T.data && !T.loading && !T.error) loadTrades();  // asked once; after a failure only the Retry button asks again
+  const lot = $("r-lot"), inst = (s.instruments || []).find(i => i.lot_size);
+  if (lot && !lot.value && inst) lot.value = String(inst.lot_size);  // the lot size of the contracts being watched, until you type another
+  drawTrades();
+}
+function tradePayload() { const v = id => ($(id) && $(id).value || "").trim(); return {instrument: v("t-instr"), side: v("t-side") || "BUY", qty: v("t-qty"), price: v("t-price"), setup_id: v("t-setup"), note: v("t-note")}; }
+function noteLimit() {
+  const d = T.data;
+  if (d && d.available && d.daily_loss_reached && !T.said && LAST) {
+    T.said = true;
+    guard("alerts", () => raiseAlerts([{level: "warn", key: "daily-loss", title: "Your daily loss limit is reached", text: `${rs(d.lost_today)} lost of ${rs(d.limits.max_daily_loss)}: your own limit says stop for the day.`}], LAST));
+  }
+  if (d && d.available && !d.daily_loss_reached) T.said = false;
+}
+async function logTrade() {
+  tradeMsg("logging…");
+  try {
+    const r = await sendJson("POST", "/api/trades", tradePayload());
+    if (!r.ok) { tradeMsg(r.status === 404 ? "this Prism server has no trade log yet (restart Prism to load the current version)" : "not logged: " + detailText(r.body), true); return; }
+    T.data = r.body.summary;
+    for (const id of ["t-qty", "t-price", "t-note"]) if ($(id)) $(id).value = "";
+    tradeMsg("logged");
+    drawTrades(); noteLimit();
+    if (LAST) guard("alerts-line", () => renderAlerts(LAST.health || {issues: [], warnings: []}));
+  } catch (e) { tradeMsg("not logged: " + e, true); }
+}
+async function voidTrade(id) {
+  if (typeof confirm === "function" && !confirm("Void this trade? The file keeps it and adds a line that cancels it; this cannot be undone.")) return;
+  try {
+    const r = await sendJson("POST", "/api/trades/" + encodeURIComponent(id) + "/void");
+    if (!r.ok) { tradeMsg("not voided: " + detailText(r.body), true); return; }
+    T.data = r.body.summary; tradeMsg("voided"); drawTrades(); noteLimit();
+    if (LAST) guard("alerts-line", () => renderAlerts(LAST.health || {issues: [], warnings: []}));
+  } catch (e) { tradeMsg("not voided: " + e, true); }
+}
+function riskHtml(r) {
+  const warn = (r.warnings || []).map(w => `<div class="flat">⚠ ${esc(w)}</div>`).join("");
+  const per = `One lot (${r.lot_size} units) loses ${rs(r.loss_per_lot)} at your stop (${n2(r.entry)} to ${n2(r.stop)}) and costs ${rs(r.outlay_per_lot)} to buy.`;
+  if (r.lots == null) return `<div>${per}</div>${warn}`;
+  const bound = r.binding === "lots_by_daily_limit" ? `what is left of today's loss limit (${rs(r.left_today)})` : `your per-trade limit (${rs(r.per_trade_loss)})`;
+  return `<div><b>${r.lots} lot${r.lots === 1 ? "" : "s"}</b> (${r.quantity} units): loss at the stop ${rs(r.loss_at_stop)}, premium outlay ${rs(r.outlay)}${r.outlay_pct_of_capital != null ? ` (${r.outlay_pct_of_capital.toFixed(1)}% of capital)` : ""}. Decided by ${bound}.</div>` +
+    `<div class="mut">${per} By limit: per-trade ${r.lots_by_trade_limit == null ? "not set" : r.lots_by_trade_limit + " lot(s)"}, today ${r.lots_by_daily_limit == null ? "not set" : r.lots_by_daily_limit + " lot(s)"}. The loss at the stop ignores slippage, a gap through it, brokerage and tax. You decide.</div>${warn}`;
+}
+async function calcRisk() {
+  const v = id => ($(id) && $(id).value || "").trim(), q = new URLSearchParams();
+  for (const [k, id] of [["entry", "r-entry"], ["stop", "r-stop"], ["lot", "r-lot"], ["capital", "r-capital"], ["risk_pct", "r-pct"], ["max_loss", "r-max"]]) if (v(id) !== "") q.set(k, v(id));
+  try {
+    const r = await sendJson("GET", "/api/risk?" + q.toString());
+    setHtml("risk-out", r.ok ? riskHtml(r.body) : `<div class="err">${esc(r.status === 404 ? "this Prism server has no calculator yet (restart Prism to load the current version)" : r.status === 422 && Array.isArray(r.body && r.body.detail) ? "fill in the entry premium, the stop premium and the lot size (numbers)" : detailText(r.body))}</div>`);
+  } catch (e) { setHtml("risk-out", `<div class="err">${esc(String(e))}</div>`); }
+}
+
+// ================= driving the page =================
+function guard(name, fn) { try { fn(); $("jserr").textContent = ""; } catch (e) { console.error(name, e); $("jserr").textContent = "Dashboard display error in " + name + ": " + e.message; } }
+
+const TAB_CONTENT = {overview: ["decision", "tfrow", "ctx", "setup", "strat", "rg", "dhs", "ev3"], options: ["opt-head", "opt-sel", "opt-exp", "opt-win", "opt-table"], analysis: ["analysis-body"], journal: ["journal-body"], trades: ["trades-body", "risk-out"]};
+function clearHiddenTabs() { for (const [tab, ids] of Object.entries(TAB_CONTENT)) if (tab !== TAB) for (const id of ids) setHtml(id, ""); }
+
+function render(s) {
+  LAST = s;
+  const h = s.health || {live: false, trusted: false, issues: [], warnings: []};
+  $("main").classList.toggle("staled", isStale());  // a stale page is dimmed as a whole, whichever tab is open
+  guard("header", () => { renderHeader(s, h); renderAlerts(h); renderStale(s); });
+  if (isStale()) clearHiddenTabs();  // the tabs that are not open still hold what they last drew while the link was live: that must not outlive it, even out of sight
+  if (TAB === "overview") guard("overview", () => renderOverview(s, h));
+  else if (TAB === "options") guard("options", () => renderOptions(s.options));
+  else if (TAB === "analysis") guard("analysis", () => renderAnalysisTab(s, h));
+  else if (TAB === "journal") guard("journal", () => renderJournalTab(s));
+  else if (TAB === "trades") guard("trades", () => renderTradesTab(s));
+}
+
+function showTab(name) {
+  if (!document.getElementById("tab-" + name)) name = "overview";
+  TAB = name;
+  for (const sec_ of document.querySelectorAll(".tab")) sec_.hidden = sec_.id !== "tab-" + name;
+  for (const b of document.querySelectorAll("#tabs button")) b.setAttribute("aria-selected", String(b.dataset.tab === name));
+  try { history.replaceState(null, "", "#" + name); } catch (e) { /* a file:// page may refuse: the tab still works */ }
+  if (LAST) render(LAST);  // the last snapshot is shown at once: the data kept arriving while the tab was hidden
+  else renderLoading();    // ...and before the first one there is only the loading state
+}
+document.addEventListener("click", e => {
+  if (e.target.id === "alert-mode") { cycleAlertMode(); return; }
+  if (e.target.id === "alert-clear") { ALERT_LOG.length = 0; markSeen(); renderAlertLog(); return; }
+  if (e.target.id === "t-log") { logTrade(); return; }
+  if (e.target.id === "t-refresh") { T.error = null; loadTrades(); return; }
+  if (e.target.id === "t-calc") { calcRisk(); return; }
+  if (e.target.id === "t-use-setup") { const d = LAST && LAST.trading && LAST.trading.decision; if (d && d.setup_id && $("t-setup")) $("t-setup").value = d.setup_id; return; }
+  if (e.target.dataset && e.target.dataset.void) { voidTrade(e.target.dataset.void); return; }
+  audio(); markSeen();  // the first click on the page is what lets the browser play a sound
+  const b = e.target.closest("[data-tab],[data-goto]");
+  if (b) { if (b.dataset.goto === "analysis" && b.dataset.strategy !== undefined) openStrategy(b.dataset.strategy); showTab(b.dataset.tab || b.dataset.goto); return; }
+  if (e.target.id === "j-refresh") loadJournal();
+});
+document.addEventListener("keydown", e => {  // left / right move between the tabs
+  if (!e.target.closest || !e.target.closest("#tabs") || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
+  const names = [...document.querySelectorAll("#tabs button")].map(b => b.dataset.tab), i = names.indexOf(TAB);
+  const next = names[(i + (e.key === "ArrowRight" ? 1 : names.length - 1)) % names.length];
+  showTab(next); document.getElementById("tb-" + next).focus();
+});
+
+let WS = null;  // exactly one connection for the life of the page: switching tabs never touches it
+// The page is live only while snapshots keep arriving. A closed link, or a link that has gone silent for SILENT_MS (one timer, started again by every snapshot: this is not polling),
+// makes the page STALE at once; the next valid snapshot makes it live again, and is drawn from scratch from what it says: no stale decision state is carried over.
+function loseLink() {
+  clearTimeout(SILENCE);
+  if (!LAST) { CONN = "loading"; renderLoading(); return; }
+  if (CONN !== "stale") {
+    CONN = "stale";
+    guard("alerts", () => raiseAlerts([{level: "warn", key: "link", title: "Lost the link to Prism", text: `the page is showing the snapshot made at ${fmtT(LAST.server_time)} IST: nothing on it is current.`}], LAST));
+    render(LAST);
+  }
+}
+function connect() {
+  if (WS && WS.readyState <= 1) return;
+  if (!LAST) TRIES++;
+  WS = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws");
+  WS.onopen = () => { LINK = true; };  // an open socket is not a live page: only a snapshot is
+  WS.onmessage = e => {
+    LINK = true; TRIES = 0; clearTimeout(SILENCE); SILENCE = setTimeout(loseLink, SILENT_MS);
+    CONN = "live";
+    const snap = JSON.parse(e.data);
+    guard("alerts", () => raiseAlerts(alertChanges(LAST, snap, ALERT_MEMO), snap));  // LAST is still the previous snapshot here
+    render(snap);
+  };
+  WS.onclose = () => { LINK = false; loseLink(); setTimeout(connect, 2000); };
+}
+function fitTabs() { const t = $("top"); document.documentElement.style.setProperty("--topH", t.offsetHeight + "px"); }
+window.addEventListener("resize", fitTabs);
+window.addEventListener("focus", markSeen);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) markSeen(); });
+renderAlertMode();
+fitTabs();
+showTab((location.hash || "").slice(1) || "overview");
+renderLoading();
+connect();
+loadTrades();  // once at the start, so a loss limit already reached is on the page whichever tab is open; after that, only what you log changes it
+</script>
+</body>
+</html>

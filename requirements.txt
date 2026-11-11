@@ -1,0 +1,43 @@
+# Prism's packages, each pinned to the exact version the test suite was verified with (Python 3.12, Windows).
+# Python 3.11 or later is needed: websockets 17 and starlette 1.10 do not support 3.10.
+# To move to newer versions: install them, run `python -m pytest`, and update the pins here.
+
+# --- what Prism uses directly ---
+smartapi-python==1.5.5
+pyotp==2.10.0
+fastapi==0.162.0
+uvicorn==0.54.0
+# uvicorn has no WebSocket server of its own. Without this (or wsproto) /ws is not served and the dashboard never goes live.
+websockets==17.4
+requests==2.34.2
+# the client of Angel One's WebSocket feed (Prism uses it beside SmartApi's own wrapper)
+websocket-client==1.9.2
+psycopg2-binary==2.9.13
+# Prism quiets the broker library's logger through it (smartapi-python does not declare it)
+logzero==1.7.0
+# the test suite
+pytest==9.1.1
+
+# --- what those need, pinned so a fresh install is the one that was tested ---
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anyio==4.15.1
+certifi==2026.10.23
+charset-normalizer==3.5.2
+click==8.5.0
+colorama==0.4.6 ; sys_platform == "win32"
+h11==0.16.0
+idna==3.20
+iniconfig==2.3.1
+opentelemetry-api==1.45.2
+packaging==26.3
+pluggy==1.7.0
+pydantic==2.14.2
+pydantic_core==2.50.2
+Pygments==2.21.0
+python-dateutil==2.9.0.post0
+six==1.17.0
+starlette==1.10.0
+typing_extensions==4.16.0
+typing-inspection==0.4.4
+urllib3==2.8.0

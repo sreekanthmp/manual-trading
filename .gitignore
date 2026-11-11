@@ -1,0 +1,57 @@
+# Data files
+NIFTY_1min_history.csv
+NIFTY_1day_history.csv
+NIFTY_5min_history.csv
+NIFTY_15min_history.csv
+nifty_trader_v2/feature_cache.csv
+
+# Virtual environment
+.venv/
+
+# Caches
+__pycache__/
+*.pyc
+
+# Large datasets
+*.parquet
+*.feather
+
+# Angel One cache chunks
+angelone/angelone_1day_data/
+angelone/angelone_1min_data/
+angelone/angelone_5min_data/
+angelone/angelone_15min_data/
+
+# Logs
+logs/
+*.log
+
+# Claude
+.claudeignore
+
+# --- secrets: never commit ---
+config.json
+.env
+.env.*
+!.env.example
+.angel_session.json
+
+# --- quant_trading_system: generated data, state, logs ---
+quant_trading_system/data/
+quant_trading_system/logs/
+quant_trading_system/paper/
+quant_trading_system/.pytest_cache/
+
+# local operator switch and ops files
+quant_trading_system/KILL_SWITCH
+
+# --- market-data service: runtime data and tool caches ---
+data/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.import_linter_cache/
+*.egg-info/
+
+# market-data app: daily instrument-master cache
+.cache/

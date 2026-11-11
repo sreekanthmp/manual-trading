@@ -1,0 +1,15 @@
+# Optional: `pip install pre-commit && pre-commit install` (pre-commit fetches gitleaks and ruff itself: neither needs installing here). The tests are run with `python -m pytest`.
+# `files:` belongs to each HOOK entry (a `files:` key beside `hooks:` is not part of the schema and
+# is ignored with a warning), so the ruff hooks never touch the legacy angelone/ folder.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff
+        files: ^(app|tests|scripts)/.*\.py$
+      - id: ruff-format
+        files: ^(app|tests|scripts)/.*\.py$

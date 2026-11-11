@@ -1,0 +1,17 @@
+{
+  "smartapi": {
+    "api_key": "YOUR_API_KEY_HERE",
+    "client_id": "YOUR_CLIENT_ID_HERE",
+    "password": "YOUR_PASSWORD_HERE",
+    "totp_token": "YOUR_TOTP_SECRET_HERE",
+    "jwtToken": "GENERATED_AFTER_LOGIN",
+    "feedToken": "GENERATED_AFTER_LOGIN"
+  },
+  "notes": {
+    "setup": "1. Get API key from https://smartapi.angelbroking.com/",
+    "login": "2. Run login script to generate jwtToken and feedToken",
+    "tokens": "3. Tokens expire daily - regenerate each morning",
+    "nifty_token": "99926000 (NIFTY 50 spot index)",
+    "exchange_type": "1 = NSE, 2 = NFO (options), 3 = BSE"
+  }
+}

@@ -1,0 +1,4112 @@
+{
+ "lifecycle": {
+  "breakout/bear": [
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 25,400.00"
+     ]
+    ],
+    "hash": "b1ddf6a38b07e00b",
+    "live": [
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "DETECTED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 24
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 25,400.00"
+     ]
+    ],
+    "hash": "b1ddf6a38b07e00b",
+    "live": [
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "DETECTED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 25
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 25,400.00"
+     ]
+    ],
+    "hash": "b1ddf6a38b07e00b",
+    "live": [
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "DETECTED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 26
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bear:1793943000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 25,385.00"
+     ],
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 25,400.00"
+     ]
+    ],
+    "hash": "ac3594ebd48a2c17",
+    "live": [
+     [
+      "breakout_retest:bear:1793943000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "WAITING_FOR_CONFIRMATION",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 27
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bear:1793943000",
+      "CONFIRMED",
+      "CONFIRMED: trigger 25,385.00 (confirming candle completed 11:40)"
+     ],
+     [
+      "breakout_retest:bear:1793943000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 25,385.00"
+     ],
+     [
+      "breakout_retest:bear:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 25,400.00"
+     ]
+    ],
+    "hash": "9aa42a070c17075c",
+    "live": [
+     [
+      "breakout_retest:bear:1793943000",
+      "CONFIRMED",
+      "READY_TO_ACT"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "CONFIRMED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 28
+   }
+  ],
+  "breakout/bull": [
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 24,600.00"
+     ]
+    ],
+    "hash": "46f7ec0768170f0d",
+    "live": [
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "DETECTED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 24
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 24,600.00"
+     ]
+    ],
+    "hash": "46f7ec0768170f0d",
+    "live": [
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "DETECTED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 25
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 24,600.00"
+     ]
+    ],
+    "hash": "46f7ec0768170f0d",
+    "live": [
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "DETECTED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 26
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bull:1793943000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 24,615.00"
+     ],
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 24,600.00"
+     ]
+    ],
+    "hash": "06f914b45615ea7f",
+    "live": [
+     [
+      "breakout_retest:bull:1793943000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "WAITING_FOR_CONFIRMATION",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 27
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "breakout_retest:bull:1793943000",
+      "CONFIRMED",
+      "CONFIRMED: trigger 24,615.00 (confirming candle completed 11:40)"
+     ],
+     [
+      "breakout_retest:bull:1793943000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 24,615.00"
+     ],
+     [
+      "breakout_retest:bull:1793943000",
+      "DETECTED",
+      "DETECTED: swing level x3 24,600.00"
+     ]
+    ],
+    "hash": "f91675b27c370a21",
+    "live": [
+     [
+      "breakout_retest:bull:1793943000",
+      "CONFIRMED",
+      "READY_TO_ACT"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "CONFIRMED",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 28
+   }
+  ],
+  "pullback/bear": [
+   {
+    "ended": [],
+    "events": [],
+    "hash": "4ca1e2e69b06ff0e",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 11
+   },
+   {
+    "ended": [],
+    "events": [],
+    "hash": "e8c4c2743d7f30e6",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 12
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "83811bb700c0029f",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 13
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "4a1b30b9538c2736",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 14
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "df44ab5f3c91e3bc",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 15
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "05e121a764fa5c34",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 16
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 25,417.00"
+     ],
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "23a18d51abcc6056",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "WAITING_FOR_CONFIRMATION",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 17
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 25,417.00"
+     ],
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "c0010b1505384502",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "WAITING_FOR_CONFIRMATION",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 18
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bear:1793940000",
+      "CONFIRMED",
+      "CONFIRMED: trigger 25,410.00 (confirming candle completed 10:55)"
+     ],
+     [
+      "trend_pullback:bear:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 25,417.00"
+     ],
+     [
+      "trend_pullback:bear:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 25,500.00"
+     ]
+    ],
+    "hash": "99dc0945366b801e",
+    "live": [
+     [
+      "trend_pullback:bear:1793940000",
+      "CONFIRMED",
+      "READY_TO_ACT"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "CONFIRMED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 19
+   }
+  ],
+  "pullback/bull": [
+   {
+    "ended": [],
+    "events": [],
+    "hash": "a5188040da13f701",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 11
+   },
+   {
+    "ended": [],
+    "events": [],
+    "hash": "a9a9af7b31f10ddf",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "NO SETUP",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 12
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "b4e3aea51e55fa5b",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 13
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "de1dca3d57d6ffd9",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 14
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "b07f76e1548575b5",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 15
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "17e3a371964bf280",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "DETECTED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 16
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 24,583.00"
+     ],
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "b02d63d04db04db7",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "WAITING_FOR_CONFIRMATION",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 17
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 24,583.00"
+     ],
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "981150a5215f62c3",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "WAITING_FOR_CONFIRMATION",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 18
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "trend_pullback:bull:1793940000",
+      "CONFIRMED",
+      "CONFIRMED: trigger 24,590.00 (confirming candle completed 10:55)"
+     ],
+     [
+      "trend_pullback:bull:1793940000",
+      "WAITING_FOR_CONFIRMATION",
+      "WAITING_FOR_CONFIRMATION: trigger 24,583.00"
+     ],
+     [
+      "trend_pullback:bull:1793940000",
+      "DETECTED",
+      "DETECTED: leg origin 24,500.00"
+     ]
+    ],
+    "hash": "2789df09f6ef5b70",
+    "live": [
+     [
+      "trend_pullback:bull:1793940000",
+      "CONFIRMED",
+      "READY_TO_ACT"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "CONFIRMED",
+      true
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "INACTIVE",
+      false
+     ]
+    ],
+    "through": 19
+   }
+  ],
+  "range/bear": [
+   {
+    "ended": [],
+    "events": [
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED: range resistance 25,500.00"
+     ]
+    ],
+    "hash": "8807c4c5d60f1476",
+    "live": [
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "DETECTED",
+      true
+     ]
+    ],
+    "through": 30
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED: range resistance 25,500.00"
+     ]
+    ],
+    "hash": "80fc6bda9ea5d940",
+    "live": [
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "DETECTED",
+      true
+     ]
+    ],
+    "through": 31
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range resistance 25,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED: range resistance 25,500.00"
+     ]
+    ],
+    "hash": "0b05a828533fe88d",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 32
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range resistance 25,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED: range resistance 25,500.00"
+     ]
+    ],
+    "hash": "a3cef51524d35298",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 33
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range resistance 25,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED: range resistance 25,500.00"
+     ]
+    ],
+    "hash": "d0e9e67dbc721a97",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 34
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bear:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range resistance 25,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bear:1793939700",
+      "DETECTED",
+      "DETECTED: range resistance 25,500.00"
+     ]
+    ],
+    "hash": "cec10dd18520fcb7",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 35
+   }
+  ],
+  "range/bull": [
+   {
+    "ended": [],
+    "events": [
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED: range support 24,500.00"
+     ]
+    ],
+    "hash": "027549bc49d799db",
+    "live": [
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "DETECTED",
+      true
+     ]
+    ],
+    "through": 30
+   },
+   {
+    "ended": [],
+    "events": [
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED: range support 24,500.00"
+     ]
+    ],
+    "hash": "4816a98451d2241d",
+    "live": [
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED"
+     ]
+    ],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "DETECTED",
+      true
+     ]
+    ],
+    "through": 31
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range support 24,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED: range support 24,500.00"
+     ]
+    ],
+    "hash": "89717c1e7f12b220",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 32
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range support 24,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED: range support 24,500.00"
+     ]
+    ],
+    "hash": "7c0ad29cf6e6fe37",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 33
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range support 24,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED: range support 24,500.00"
+     ]
+    ],
+    "hash": "8b6cccaebaed3fea",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 34
+   },
+   {
+    "ended": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED"
+     ]
+    ],
+    "events": [
+     [
+      "range_reversal:bull:1793939700",
+      "EXPIRED",
+      "EXPIRED: no longer present: price closed beyond the range support 24,500.00 and has not reclaimed it: a break in progress"
+     ],
+     [
+      "range_reversal:bull:1793939700",
+      "DETECTED",
+      "DETECTED: range support 24,500.00"
+     ]
+    ],
+    "hash": "fe24056f321e8610",
+    "live": [],
+    "monitor": [
+     [
+      "trend_pullback",
+      "INACTIVE",
+      false
+     ],
+     [
+      "breakout_retest",
+      "NO SETUP",
+      true
+     ],
+     [
+      "range_reversal",
+      "NO SETUP",
+      true
+     ]
+    ],
+    "through": 35
+   }
+  ]
+ },
+ "pipeline": {
+  "bear/12": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "d0f27569d09da723",
+    "events": "4f53cda18c2baa0c",
+    "explain": "45cc843360027db0",
+    "market": "5e2b0cd7ecbe799c",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "875084cc5df4f57b"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bear/13": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "c02ceed80a5db9fa",
+    "events": "4f53cda18c2baa0c",
+    "explain": "c78c1b3d0944c324",
+    "market": "206cff9dcedf2bcd",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "dacdd0ac57efa319"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bear/14": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "4efc562072bb28a8",
+    "events": "4f53cda18c2baa0c",
+    "explain": "9cd93b70102c2e7b",
+    "market": "1f9f47b3828f5be9",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "31f321ee6c773a5d"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bear/15": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "b42117c6b914aa30",
+    "events": "4f53cda18c2baa0c",
+    "explain": "5e761d996d7029d7",
+    "market": "3b2d4e5b4c206acd",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "3f336ce644196a88"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bear/16": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "28700c9c9a605d99",
+    "events": "86485a0228ce5166",
+    "explain": "9a92d9f17c47713d",
+    "market": "af4188125782e8f0",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "5bfa8ea13f2d3e4a",
+    "strategies": "0b8d7293b45af616"
+   },
+   "headline": "WAIT: Trend Pullback (PE) is developing",
+   "setups": [
+    [
+     "trend_pullback:bear:1793940000",
+     "DETECTED",
+     "DETECTED"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bear/17": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "677b2be7512f8312",
+    "events": "d12f281f8beab6ac",
+    "explain": "55178eda9e59a57f",
+    "market": "2e0787f4de323a12",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4c90cc8883b70296",
+    "strategies": "2f335b625aef7a4c"
+   },
+   "headline": "WAIT: Trend Pullback (PE) is developing",
+   "setups": [
+    [
+     "trend_pullback:bear:1793940000",
+     "WAITING_FOR_CONFIRMATION",
+     "WAITING_FOR_CONFIRMATION"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bear/18": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "677b2be7512f8312",
+    "events": "d12f281f8beab6ac",
+    "explain": "173925d7f8534d57",
+    "market": "0a3e6270c5135e1b",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "a0d545021d6c0c6a",
+    "strategies": "2f335b625aef7a4c"
+   },
+   "headline": "WAIT: Trend Pullback (PE) is developing",
+   "setups": [
+    [
+     "trend_pullback:bear:1793940000",
+     "WAITING_FOR_CONFIRMATION",
+     "WAITING_FOR_CONFIRMATION"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bear/19": {
+   "action": "BUY PE",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "678252b5fc62497d",
+    "events": "02b166d1ef2767f3",
+    "explain": "e51bcd85ab5be833",
+    "market": "21b89f32a108a999",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "874fd25ffbca7547",
+    "strategies": "be95a37eb9ab5663"
+   },
+   "headline": "BUY PE: Trend Pullback setup confirmed",
+   "setups": [
+    [
+     "trend_pullback:bear:1793940000",
+     "CONFIRMED",
+     "READY_TO_ACT"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bear/20": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "d9674f8f028a7d20",
+    "events": "e0976a74fe462d0a",
+    "explain": "be5ebcbeb3bee7d4",
+    "market": "eff0813a40593814",
+    "recent": "4d45a7d6481b4d02",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "84a76f7f6a09c54b"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bull/12": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "47adda2d5ddf42ae",
+    "events": "4f53cda18c2baa0c",
+    "explain": "6bc1982875fceda0",
+    "market": "92a54c84e0efd1b5",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "93cf21ffe0db8596"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bull/13": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "6b029e4f648ba018",
+    "events": "4f53cda18c2baa0c",
+    "explain": "250f32ebe54c9b88",
+    "market": "a3c31e4aaf6181b7",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "9759d5a0a87c6a06"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bull/14": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "870a427bd927e906",
+    "events": "4f53cda18c2baa0c",
+    "explain": "c6e96eefc096d2c5",
+    "market": "b28121575d8dcf2f",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "68978f503343eee4"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bull/15": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "760a3332a3d7e492",
+    "events": "4f53cda18c2baa0c",
+    "explain": "d79379763c2cc0b9",
+    "market": "2c3f984febe4aa7c",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "42a3d16affe56e7b"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  },
+  "bull/16": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "3d5962f2a7869df8",
+    "events": "b0dfa3d0ee856017",
+    "explain": "1baa5beb94929239",
+    "market": "00e7cb54cdedd635",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "eab83ad6efce647b",
+    "strategies": "2a7450df604b8aa1"
+   },
+   "headline": "WAIT: Trend Pullback (CE) is developing",
+   "setups": [
+    [
+     "trend_pullback:bull:1793940000",
+     "DETECTED",
+     "DETECTED"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bull/17": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "d293a01f0e849a1e",
+    "events": "f6ecdef6f7295ff0",
+    "explain": "3552832eaa00fd98",
+    "market": "a4f33b75506910ea",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "eb8810381fce6fe5",
+    "strategies": "4b403941dcf0059d"
+   },
+   "headline": "WAIT: Trend Pullback (CE) is developing",
+   "setups": [
+    [
+     "trend_pullback:bull:1793940000",
+     "WAITING_FOR_CONFIRMATION",
+     "WAITING_FOR_CONFIRMATION"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bull/18": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "d293a01f0e849a1e",
+    "events": "f6ecdef6f7295ff0",
+    "explain": "80912ba1f83e5ce5",
+    "market": "47fed00d7de4325d",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "9dfcc48a415eb8f9",
+    "strategies": "4b403941dcf0059d"
+   },
+   "headline": "WAIT: Trend Pullback (CE) is developing",
+   "setups": [
+    [
+     "trend_pullback:bull:1793940000",
+     "WAITING_FOR_CONFIRMATION",
+     "WAITING_FOR_CONFIRMATION"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bull/19": {
+   "action": "BUY CE",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "edd0101566fef2c8",
+    "events": "3c0428a5370c4dee",
+    "explain": "f9693ea29d922fcc",
+    "market": "e03f82843949a56a",
+    "recent": "4f53cda18c2baa0c",
+    "setups": "8c8235f0ef1a02e5",
+    "strategies": "93073403f70915e3"
+   },
+   "headline": "BUY CE: Trend Pullback setup confirmed",
+   "setups": [
+    [
+     "trend_pullback:bull:1793940000",
+     "CONFIRMED",
+     "READY_TO_ACT"
+    ]
+   ],
+   "strategy": "trend_pullback"
+  },
+  "bull/20": {
+   "action": "WAIT",
+   "hash": {
+    "data": "51f30d1faee5f508",
+    "decision": "012abe105f51b128",
+    "events": "e9314f158dd70988",
+    "explain": "e7acb7a66e15f006",
+    "market": "dd676fdca48ededb",
+    "recent": "ecf59ca767d6808e",
+    "setups": "4f53cda18c2baa0c",
+    "strategies": "367647d6468a379f"
+   },
+   "headline": "WAIT: the market is tradable but there is no setup yet",
+   "setups": [],
+   "strategy": null
+  }
+ },
+ "scans": {
+  "breakout/24/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "f65927380cf82d9b",
+   "invalidation": 25408.75,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": null,
+   "zone": [
+    25393.75,
+    25406.25
+   ]
+  },
+  "breakout/24/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "7807b9ad62f58737",
+   "invalidation": null,
+   "note": "1H bearish / 15M sideways: a bullish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "777a1ea68bf59a9d",
+   "invalidation": null,
+   "note": "no confirmed 15M swing low yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4387ddf08a4cc775",
+   "invalidation": null,
+   "note": "1H bullish / 15M sideways: a bearish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "039eeae671cac235",
+   "invalidation": 24591.25,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": null,
+   "zone": [
+    24593.75,
+    24606.25
+   ]
+  },
+  "breakout/24/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/24/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3c3b384ee3656940",
+   "invalidation": null,
+   "note": "no confirmed 15M swing high yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "f65927380cf82d9b",
+   "invalidation": 25408.75,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": null,
+   "zone": [
+    25393.75,
+    25406.25
+   ]
+  },
+  "breakout/25/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "7807b9ad62f58737",
+   "invalidation": null,
+   "note": "1H bearish / 15M sideways: a bullish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "777a1ea68bf59a9d",
+   "invalidation": null,
+   "note": "no confirmed 15M swing low yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4387ddf08a4cc775",
+   "invalidation": null,
+   "note": "1H bullish / 15M sideways: a bearish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "039eeae671cac235",
+   "invalidation": 24591.25,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": null,
+   "zone": [
+    24593.75,
+    24606.25
+   ]
+  },
+  "breakout/25/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/25/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3c3b384ee3656940",
+   "invalidation": null,
+   "note": "no confirmed 15M swing high yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "f65927380cf82d9b",
+   "invalidation": 25408.75,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": null,
+   "zone": [
+    25393.75,
+    25406.25
+   ]
+  },
+  "breakout/26/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "7807b9ad62f58737",
+   "invalidation": null,
+   "note": "1H bearish / 15M sideways: a bullish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "777a1ea68bf59a9d",
+   "invalidation": null,
+   "note": "no confirmed 15M swing low yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4387ddf08a4cc775",
+   "invalidation": null,
+   "note": "1H bullish / 15M sideways: a bearish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "039eeae671cac235",
+   "invalidation": 24591.25,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": null,
+   "zone": [
+    24593.75,
+    24606.25
+   ]
+  },
+  "breakout/26/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/26/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3c3b384ee3656940",
+   "invalidation": null,
+   "note": "no confirmed 15M swing high yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "a7e98b2b4d05e5ec",
+   "invalidation": 25402.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 25385.0,
+   "zone": [
+    25375.0,
+    25385.0
+   ]
+  },
+  "breakout/27/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "7807b9ad62f58737",
+   "invalidation": null,
+   "note": "1H bearish / 15M sideways: a bullish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "777a1ea68bf59a9d",
+   "invalidation": null,
+   "note": "no confirmed 15M swing low yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4387ddf08a4cc775",
+   "invalidation": null,
+   "note": "1H bullish / 15M sideways: a bearish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "42f52d4b14391dba",
+   "invalidation": 24597.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 24615,
+   "zone": [
+    24615,
+    24625.0
+   ]
+  },
+  "breakout/27/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/27/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3c3b384ee3656940",
+   "invalidation": null,
+   "note": "no confirmed 15M swing high yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "d651e6cea2b73afb",
+   "invalidation": 25402.5,
+   "note": "",
+   "status": "CONFIRMED",
+   "trigger": 25385.0,
+   "zone": [
+    25375.0,
+    25385.0
+   ]
+  },
+  "breakout/28/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "7807b9ad62f58737",
+   "invalidation": null,
+   "note": "1H bearish / 15M sideways: a bullish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "10c4a4b087812446",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "777a1ea68bf59a9d",
+   "invalidation": null,
+   "note": "no confirmed 15M swing low yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4387ddf08a4cc775",
+   "invalidation": null,
+   "note": "1H bullish / 15M sideways: a bearish breakout would go against the hig",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "57bcdc92e5e4b8e3",
+   "invalidation": 24597.5,
+   "note": "",
+   "status": "CONFIRMED",
+   "trigger": 24615,
+   "zone": [
+    24615,
+    24625.0
+   ]
+  },
+  "breakout/28/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "e3c9450ff7811cc7",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M sideways): range revers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "breakout/28/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3c3b384ee3656940",
+   "invalidation": null,
+   "note": "no confirmed 15M swing high yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "8c5783fece508656",
+   "invalidation": null,
+   "note": "price is at its 25,350.00 low: no pullback yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/11/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "619ecd20642b0fd9",
+   "invalidation": null,
+   "note": "price is at its 24,650.00 high: no pullback yet",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "f4e66e75361c7685",
+   "invalidation": null,
+   "note": "pullback high 25,380.00 is not at a meaningful level (15M EMA20 25,430",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/12/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "62203c3148c94553",
+   "invalidation": null,
+   "note": "pullback low 24,620.00 is not at a meaningful level (15M EMA20 24,570.",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "3f92a8562522108a",
+   "invalidation": 25402.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 25372.0,
+   "zone": [
+    25362.0,
+    25372.0
+   ]
+  },
+  "pullback/13/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/13/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3c6d7a4c11d0514a",
+   "invalidation": 24597.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 24628,
+   "zone": [
+    24628,
+    24638.0
+   ]
+  },
+  "pullback/14/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "61ceb790eb69bb5d",
+   "invalidation": 25414.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 25392.0,
+   "zone": [
+    25382.0,
+    25392.0
+   ]
+  },
+  "pullback/14/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/14/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "5410e5306ea2361a",
+   "invalidation": 24585.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 24608,
+   "zone": [
+    24608,
+    24618.0
+   ]
+  },
+  "pullback/15/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "3bae19bee180c662",
+   "invalidation": 25426.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 25404.0,
+   "zone": [
+    25394.0,
+    25404.0
+   ]
+  },
+  "pullback/15/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/15/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "738a7e39b7a3e0a3",
+   "invalidation": 24573.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 24596,
+   "zone": [
+    24596,
+    24606.0
+   ]
+  },
+  "pullback/16/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "27b86acb1ff0cc6b",
+   "invalidation": 25436.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 25416.0,
+   "zone": [
+    25406.0,
+    25416.0
+   ]
+  },
+  "pullback/16/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/16/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "3a05ea66d58bb160",
+   "invalidation": 24563.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 24584,
+   "zone": [
+    24584,
+    24594.0
+   ]
+  },
+  "pullback/17/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "2ce783cd0ae82130",
+   "invalidation": 25440.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 25417.0,
+   "zone": [
+    25407.0,
+    25417.0
+   ]
+  },
+  "pullback/17/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/17/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "7955cd0ce2f546a2",
+   "invalidation": 24559.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 24583,
+   "zone": [
+    24583,
+    24593.0
+   ]
+  },
+  "pullback/18/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "32ae7abb8e0e544c",
+   "invalidation": 25440.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 25410.0,
+   "zone": [
+    25400.0,
+    25410.0
+   ]
+  },
+  "pullback/18/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/18/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "4f959160423b650c",
+   "invalidation": 24559.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 24590,
+   "zone": [
+    24590,
+    24600.0
+   ]
+  },
+  "pullback/19/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bear/breakout_retest/bull": {
+   "applicable": false,
+   "hash": "e8019e7ebab0169b",
+   "invalidation": null,
+   "note": "1H bearish / 15M bearish: a bullish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bear/range_reversal/bear": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bear/range_reversal/bull": {
+   "applicable": false,
+   "hash": "b64c50f911780de6",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bearish, 15M bearish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bear/trend_pullback/bear": {
+   "applicable": true,
+   "hash": "1fd5137d0e84bf8c",
+   "invalidation": 25440.5,
+   "note": "",
+   "status": "CONFIRMED",
+   "trigger": 25410.0,
+   "zone": [
+    25400.0,
+    25410.0
+   ]
+  },
+  "pullback/19/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "59bcd3556fb16535",
+   "invalidation": null,
+   "note": "1H is bearish: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bull/breakout_retest/bear": {
+   "applicable": false,
+   "hash": "4cb4252cee273811",
+   "invalidation": null,
+   "note": "1H bullish / 15M bullish: a bearish breakout would go against the high",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "df0c7f510f47ddd1",
+   "invalidation": null,
+   "note": "not enough completed 15M candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bull/range_reversal/bear": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bull/range_reversal/bull": {
+   "applicable": false,
+   "hash": "6679e557a2952599",
+   "invalidation": null,
+   "note": "the market is not range-bound (1H bullish, 15M bullish): range reversa",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "8045d2ce4f82dca8",
+   "invalidation": null,
+   "note": "1H is bullish: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "pullback/19/bull/trend_pullback/bull": {
+   "applicable": true,
+   "hash": "b76a0bae28a3f182",
+   "invalidation": 24559.5,
+   "note": "",
+   "status": "CONFIRMED",
+   "trigger": 24590,
+   "zone": [
+    24590,
+    24600.0
+   ]
+  },
+  "range/30/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bear/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bear/range_reversal/bear": {
+   "applicable": true,
+   "hash": "70dce9fee2338d0b",
+   "invalidation": 25496.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 25476.0,
+   "zone": [
+    25466.0,
+    25476.0
+   ]
+  },
+  "range/30/bear/range_reversal/bull": {
+   "applicable": true,
+   "hash": "4c2790f83bcce4fa",
+   "invalidation": null,
+   "note": "price is 92% of the way across the range: the middle of a range offers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bear/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bull/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bull/range_reversal/bear": {
+   "applicable": true,
+   "hash": "4c2790f83bcce4fa",
+   "invalidation": null,
+   "note": "price is 92% of the way across the range: the middle of a range offers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bull/range_reversal/bull": {
+   "applicable": true,
+   "hash": "5b9ffeb0d9a30a75",
+   "invalidation": 24503.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 24524,
+   "zone": [
+    24524,
+    24534.0
+   ]
+  },
+  "range/30/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/30/bull/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bear/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bear/range_reversal/bear": {
+   "applicable": true,
+   "hash": "6bd39799e5289f2d",
+   "invalidation": 25506.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 25488.0,
+   "zone": [
+    25478.0,
+    25488.0
+   ]
+  },
+  "range/31/bear/range_reversal/bull": {
+   "applicable": true,
+   "hash": "d0cbdd6b47417791",
+   "invalidation": null,
+   "note": "no level at least 1.5x ATR15 above 25,500.00: there is no range to tra",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bear/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bull/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bull/range_reversal/bear": {
+   "applicable": true,
+   "hash": "5f610f7456d280f8",
+   "invalidation": null,
+   "note": "no level at least 1.5x ATR15 below 24,500.00: there is no range to tra",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bull/range_reversal/bull": {
+   "applicable": true,
+   "hash": "680c6ec8738955a0",
+   "invalidation": 24493.5,
+   "note": "",
+   "status": "DETECTED",
+   "trigger": 24512,
+   "zone": [
+    24512,
+    24522.0
+   ]
+  },
+  "range/31/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/31/bull/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bear/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bear/range_reversal/bear": {
+   "applicable": true,
+   "hash": "84ac8d62e8b8ebcb",
+   "invalidation": null,
+   "note": "price 25,510.00 is beyond the range resistance 25,500.00: a break in p",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bear/range_reversal/bull": {
+   "applicable": true,
+   "hash": "d0cbdd6b47417791",
+   "invalidation": null,
+   "note": "no level at least 1.5x ATR15 above 25,500.00: there is no range to tra",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bear/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bull/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bull/range_reversal/bear": {
+   "applicable": true,
+   "hash": "5f610f7456d280f8",
+   "invalidation": null,
+   "note": "no level at least 1.5x ATR15 below 24,500.00: there is no range to tra",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bull/range_reversal/bull": {
+   "applicable": true,
+   "hash": "858aa3700cdb9a73",
+   "invalidation": null,
+   "note": "price 24,490.00 is beyond the range support 24,500.00: a break in prog",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/32/bull/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bear/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bear/range_reversal/bear": {
+   "applicable": true,
+   "hash": "e7c2a865172c74b1",
+   "invalidation": 25518.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 25492.0,
+   "zone": [
+    25482.0,
+    25492.0
+   ]
+  },
+  "range/33/bear/range_reversal/bull": {
+   "applicable": true,
+   "hash": "d0cbdd6b47417791",
+   "invalidation": null,
+   "note": "no level at least 1.5x ATR15 above 25,500.00: there is no range to tra",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bear/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bull/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bull/range_reversal/bear": {
+   "applicable": true,
+   "hash": "5f610f7456d280f8",
+   "invalidation": null,
+   "note": "no level at least 1.5x ATR15 below 24,500.00: there is no range to tra",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bull/range_reversal/bull": {
+   "applicable": true,
+   "hash": "7302576e9b197ee9",
+   "invalidation": 24481.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 24508,
+   "zone": [
+    24508,
+    24518.0
+   ]
+  },
+  "range/33/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/33/bull/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bear/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bear/range_reversal/bear": {
+   "applicable": true,
+   "hash": "094c57aad1960901",
+   "invalidation": 25518.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 25491.0,
+   "zone": [
+    25481.0,
+    25491.0
+   ]
+  },
+  "range/34/bear/range_reversal/bull": {
+   "applicable": true,
+   "hash": "4a77e072cd873559",
+   "invalidation": null,
+   "note": "price is 94% of the way across the range: the middle of a range offers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bear/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bull/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bull/range_reversal/bear": {
+   "applicable": true,
+   "hash": "4a77e072cd873559",
+   "invalidation": null,
+   "note": "price is 94% of the way across the range: the middle of a range offers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bull/range_reversal/bull": {
+   "applicable": true,
+   "hash": "5cbf349394295328",
+   "invalidation": 24481.5,
+   "note": "",
+   "status": "WAITING_FOR_CONFIRMATION",
+   "trigger": 24509,
+   "zone": [
+    24509,
+    24519.0
+   ]
+  },
+  "range/34/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/34/bull/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bear/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bear/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bear/range_reversal/bear": {
+   "applicable": true,
+   "hash": "91687b80f7121b73",
+   "invalidation": 25518.5,
+   "note": "",
+   "status": "CONFIRMED",
+   "trigger": 25491.0,
+   "zone": [
+    25481.0,
+    25491.0
+   ]
+  },
+  "range/35/bear/range_reversal/bull": {
+   "applicable": true,
+   "hash": "918d37cbde484769",
+   "invalidation": null,
+   "note": "price is 85% of the way across the range: the middle of a range offers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bear/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bear/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bull/breakout_retest/bear": {
+   "applicable": true,
+   "hash": "e05faed25143863e",
+   "invalidation": null,
+   "note": "no 15M close below a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bull/breakout_retest/bull": {
+   "applicable": true,
+   "hash": "ee5b7b1075767e84",
+   "invalidation": null,
+   "note": "no 15M close above a meaningful level in the last 8 candles",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bull/range_reversal/bear": {
+   "applicable": true,
+   "hash": "918d37cbde484769",
+   "invalidation": null,
+   "note": "price is 85% of the way across the range: the middle of a range offers",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bull/range_reversal/bull": {
+   "applicable": true,
+   "hash": "f42282fbf44afc44",
+   "invalidation": 24481.5,
+   "note": "",
+   "status": "CONFIRMED",
+   "trigger": 24509,
+   "zone": [
+    24509,
+    24519.0
+   ]
+  },
+  "range/35/bull/trend_pullback/bear": {
+   "applicable": false,
+   "hash": "a2f292b6fb82b72f",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bearish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  },
+  "range/35/bull/trend_pullback/bull": {
+   "applicable": false,
+   "hash": "444dcb6634406662",
+   "invalidation": null,
+   "note": "1H is sideways: pullbacks are only taken with a bullish 1H trend",
+   "status": null,
+   "trigger": null,
+   "zone": null
+  }
+ }
+}
