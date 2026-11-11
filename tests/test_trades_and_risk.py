@@ -142,6 +142,25 @@ def test_a_loss_is_a_loss_and_the_daily_limit_is_reported(tmp_path):
     assert book.summary()["daily_loss_reached"] is False and book.summary()["daily_loss_used_pct"] is None  # no limit set: nothing is invented
 
 
+def test_the_limit_is_reached_at_exactly_the_limit(tmp_path):
+    book, _ = log(tmp_path)
+    book.add(buy(qty=100, price=100.0))
+    book.add(sell(qty=100, price=50.0))  # -5000 exactly
+    s = book.summary(Limits(max_daily_loss=5000.0))
+    assert s["lost_today"] == 5000.0 and s["daily_loss_reached"] is True and s["daily_loss_used_pct"] == pytest.approx(100.0)
+    assert book.summary(Limits(max_daily_loss=5000.5))["daily_loss_reached"] is False and book.summary(Limits(max_daily_loss=4999.5))["daily_loss_reached"] is True
+
+
+def test_a_day_with_no_loss_says_a_plain_zero_not_a_negative_one(tmp_path):
+    book, _ = log(tmp_path)
+    assert math.copysign(1.0, book.summary()["lost_today"]) == 1.0 and book.summary()["lost_today"] == 0.0
+    book.add(buy(price=100.0))
+    book.add(sell(price=100.0))  # break even
+    s = book.summary()
+    assert math.copysign(1.0, s["lost_today"]) == 1.0 and math.copysign(1.0, s["realised"]) == 1.0
+    assert size(100.0, 90.0, 65, L, lost_today=s["lost_today"])["left_today"] == 5000.0
+
+
 def test_a_profitable_day_has_no_loss_to_count(tmp_path):
     book, _ = log(tmp_path)
     book.add(buy())
@@ -389,13 +408,13 @@ def make_app(tmp_path, monkeypatch, at=None, md=None):
     return app, md
 
 
-def call(app, method, path, body=None, headers=None, query=""):
+def call(app, method, path, body=None, headers=None, query="", scheme="http"):
     """The app as an ASGI server calls it: (status, parsed body)."""
     hs = {"host": "127.0.0.1:8000", **(headers or {})}
     raw = b"" if body is None else (body if isinstance(body, bytes) else json.dumps(body).encode())
     if body is not None and "content-type" not in hs:
         hs["content-type"] = "application/json"
-    scope = {"type": "http", "asgi": {"version": "3.0"}, "http_version": "1.1", "method": method, "scheme": "http", "path": path, "raw_path": path.encode(), "query_string": query.encode(),
+    scope = {"type": "http", "asgi": {"version": "3.0"}, "http_version": "1.1", "method": method, "scheme": scheme, "path": path, "raw_path": path.encode(), "query_string": query.encode(),
              "headers": [(k.encode(), v.encode()) for k, v in hs.items()], "root_path": "", "server": ("127.0.0.1", 8000), "client": ("127.0.0.1", 50000)}  # fmt: skip
     out, sent = {"status": None, "body": b""}, False
 
@@ -485,6 +504,13 @@ def test_a_write_from_this_computers_own_page_or_a_script_on_it_is_accepted(tmp_
     app, _ = make_app(tmp_path, monkeypatch)
     code, body = call(app, "POST", "/api/trades", buy(), headers)
     assert code == 200, (headers, body)
+
+
+def test_the_origin_must_be_this_pages_own_scheme_as_well_as_host_and_port(tmp_path, monkeypatch):
+    app, _ = make_app(tmp_path, monkeypatch)
+    assert call(app, "POST", "/api/trades", buy(), {"origin": "https://127.0.0.1:8000"}, scheme="https")[0] == 200  # a page served over https writes from its own https origin
+    assert call(app, "POST", "/api/trades", buy(), {"origin": "http://127.0.0.1:8000"}, scheme="https")[0] == 403  # ... and not from the http page of the same host and port
+    assert call(app, "POST", "/api/trades", buy(), {"origin": "https://127.0.0.1:8000"}, scheme="http")[0] == 403
 
 
 def test_the_owner_who_opened_prism_to_the_network_can_write_from_a_named_host(tmp_path, monkeypatch):

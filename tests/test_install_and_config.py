@@ -109,12 +109,12 @@ def example_names() -> dict:
 
 def names_the_app_reads() -> set:
     src = "\n".join(p.read_text(encoding="utf-8") for p in (ROOT / "app").rglob("*.py"))
-    return set(re.findall(r"[\"']((?:ANGEL|PG|JOURNAL|PRISM)_[A-Z_]+)[\"']", src))
+    return set(re.findall(r"[\"']((?:ANGEL|PG|JOURNAL|PRISM|RISK)_[A-Z_]+)[\"']", src))
 
 
 def test_the_example_documents_every_setting_prism_reads_and_nothing_else():
     doc, read = example_names(), names_the_app_reads()
-    assert {"ANGEL_API_KEY", "ANGEL_CLIENT_ID", "ANGEL_PASSWORD", "ANGEL_TOTP", "PG_PASSWORD", "JOURNAL_DIR", "JOURNAL_FSYNC", "PRISM_ALLOW_REMOTE"} <= read  # (the scan finds what it should)
+    assert {"ANGEL_API_KEY", "ANGEL_CLIENT_ID", "ANGEL_PASSWORD", "ANGEL_TOTP", "PG_PASSWORD", "JOURNAL_DIR", "JOURNAL_FSYNC", "PRISM_ALLOW_REMOTE", "RISK_CAPITAL", "RISK_PER_TRADE_PCT", "RISK_MAX_DAILY_LOSS"} <= read  # (the scan finds what it should)
     assert read <= set(doc), f"read by the app, not in .env.example: {sorted(read - set(doc))}"
     unknown = {n for n in doc if n not in read and not n.startswith(("STRATEGY_", "OPTIONS_"))}
     assert not unknown, f"in .env.example, never read by the app: {sorted(unknown)}"

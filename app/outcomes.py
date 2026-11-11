@@ -114,8 +114,8 @@ def replay(setup: dict, candles: list) -> dict:
     if res["outcome"] == "target1" and t2 is not None:  # after target 1, did it get as far as target 2 before the invalidation level?
         res["target2_reached"] = False
         for s, o, h, low, c in walk:
-            if s <= res["exit_at"]:
-                continue
+            if s < res["exit_at"]:
+                continue  # (the candle that reached target 1 counts too: it did not touch the invalidation, or this would not be a target-1 trade)
             if (low <= inv) if sign > 0 else (h >= inv):
                 break
             if (h >= t2) if sign > 0 else (low <= t2):
@@ -184,7 +184,8 @@ def candles_from_db(day: date, connect=None, settings=None) -> list:
                                    pg_password=os.getenv("PG_PASSWORD", ""), pg_dbname=os.getenv("PG_DBNAME", "prism"))  # fmt: skip
     end_of_day = datetime.combine(day, dtime(23, 59), IST).timestamp()
     hist = history.load_db(settings, end_of_day, connect=connect)
-    return [(c.start, c.open, c.high, c.low, c.close) for c in hist["1m"] if history.ist_date(c.start) == day and OPEN_S <= c.start - datetime.combine(day, dtime(0, 0), IST).timestamp() < CLOSE_S]
+    midnight = datetime.combine(day, dtime(0, 0), IST).timestamp()
+    return [(c.start, c.open, c.high, c.low, c.close) for c in hist["1m"] if OPEN_S <= c.start - midnight < CLOSE_S]  # (inside that day's session: which also says it is that day)
 
 
 def journal_day(path, records: list) -> date | None:

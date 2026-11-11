@@ -116,6 +116,12 @@ loading message.
   used) and checked again. A request that Angel One *refused* or could not answer does not use up the candle's few tries; a candle it answers *without* is
   tried three times and then reported as unavailable. Nothing is ever invented to fill a gap. Sweeps run every 15 s while candles are missing and every
   minute otherwise, all through the one shared limiter (spaced requests, growing cool-down after a refusal).
+- **A new trading day on a connection that stays up (Stage 7.3).** The contracts are chosen when a connection is made, and Angel One does not always close one at midnight, so a Prism left
+  running used to keep an expired expiry's options for ever. The once-a-second watchdog now notices that the IST date has moved past the day the contracts were chosen and makes the feed
+  reconnect; the reconnect chooses the new day's contracts (the existing path, with a fresh instrument master) and subscribes them from scratch. It is on record (`rollover` in the feed
+  events and a log line), asked again only after a minute if the old connection did not close, and a failed selection is retried by the feed's own back-off while the old contracts stay on
+  record until the new ones are chosen. A feed that is down chooses afresh on its own reconnect. The instrument master of the new day is downloaded at that moment and cached for the day, so a master that
+  Angel One only refreshes in the morning is not read again until the next midnight (the contract set rarely changes overnight). Verified with fake sockets and a fake clock only.
 - **Failures are told apart.** A rejected login is not retried in a burst (15 minutes) and ends in `FAILED` with the reason; a network failure or a rate
   limit is temporary and retried soon; a database failure keeps the old history, marked stale.
 - **Logs** (`logs/app.log`): `startup 1/4 .. 4/4`, `history refresh started`, `history ready ... candles validated`, `history not complete (<kind>) ...
@@ -782,9 +788,60 @@ event, changes day and folder, and restores real version-1 records.
    12:00–13:30 shows the stricter-confirmation note; after 14:45 the decision is `NO TRADE: late session`. If the app
    was restarted, the journal has a `restart` line and the setups it carried over say `resumed`; they must not appear
    as new events. A feed drop shows as a `feed:` line when it happens (state, reconnects, the gap).
-5. After 15:30: `python -m app.journal logs/decisions-<date>.jsonl --detail`, and note for each decision whether you agree.
+5. After 15:30: `python -m app.session_check logs/decisions-<date>.jsonl` (the automatic half of this list: every BUY against the rules, and the manual items it cannot do),
+   `python -m app.journal logs/decisions-<date>.jsonl --detail`, and note for each decision whether you agree. After the daily candle update, `python -m app.outcomes logs/decisions-<date>.jsonl`
+   shows how each ready setup went (index points, not profit).
 6. Repeat on different kinds of sessions (trending, range-bound, gap up/down, volatile, an expiry day) before trusting
-   anything. Judge it on whether each decision was *explainable and matched the chart*, not on profit.
+   anything (`python -m app.session_check logs/decisions-*.jsonl --coverage` shows which kinds have a clean check so far). Judge it on whether each decision was *explainable and matched the chart*, not on profit.
+
+### Helping a manual trader (Stage 8)
+
+Prism decides nothing and places nothing. These additions make the decisions easier to *use* by hand, and make it possible to find out afterwards which of them deserve trust. **All of it was
+verified with fakes and hand-made records (and the page's own script under node), never in a live session**; where it was run on the real journals of 6-11 November that is said.
+
+**Alerts: be told, instead of having to watch.** The 🔔 button in the header chooses `sound + popup`, `sound` or `off` (remembered in the browser; the default is `sound`). One alert is raised when
+a setup becomes `READY_TO_ACT` (the urgent one: four tones, a popup that stays until you dismiss it, and a line in the log under the tabs saying the setup, the entry area, the trigger and the
+invalidation), and a warning when a setup that was ready ends or is blocked, when Prism turns NOT READY, when the live feed is lost while the market is open, and when the dashboard loses its
+link to Prism. Being ready again is only noted. Rules worth knowing: the first snapshot is a baseline (opening the page while a setup is ready announces nothing); **a flickering entry area is
+one piece of news, not twenty** (the real journal of 2026-11-11 holds one setup that went `READY_TO_ACT` and back about twenty times in seven minutes as price crossed its trigger: a setup
+that comes back within 5 minutes of having been ready is not announced again, a setup merely leaving the entry area is not an alert, and a repeated block, NOT READY or feed loss is said once per 5
+minutes); one sound per snapshot however many things changed in it; a sound needs one click on the page first and a popup needs the browser's permission (both browser rules); `off` still keeps the
+log and the count in the tab title. Alerts live in the page: a closed page raises none. The daily-loss line below is one of them.
+
+**Your own trades, and sizing them (the Trades tab).** Prism reads no account, so this is a notebook you fill in: instrument, BUY / SELL, quantity in units, price, an optional setup id (a button
+fills in the setup the decision is about) and a note. Each trade is one line of `trades-<date>.jsonl` beside the journal, **appended and never edited**: a mistake is *voided* by a line that names it, and
+a void that would leave a later sell with nothing to sell is refused. A BUY keeps what Prism's decision said at that moment (the action, the setup, the spot price) and the tab says whether you
+followed it. The result is arithmetic on the prices you typed, first in first out per instrument (instruments match ignoring case and spacing), for long option trades: a SELL needs an open
+quantity; there is no brokerage, tax or slippage, and it is not an account statement. The Result column adds up to the realised figure: a sell carries what it closed, a buy shows in grey what its sold
+part made. API: `GET /api/trades`, `POST /api/trades`, `POST /api/trades/{id}/void` and `GET /api/risk?entry=&stop=&lot=` (optionally `capital`, `risk_pct`, `max_loss`). The two writes are
+refused when the request says it comes from another site (`Origin` that is not this page's own, or `Sec-Fetch-Site: cross-site`) or was addressed to a name that is not this computer (the defence
+against a web page that resolves its own name to 127.0.0.1), unless `PRISM_ALLOW_REMOTE` opened Prism to the network; a script with no `Origin` is accepted. The size calculator needs **your** stop
+premium (Prism knows an index invalidation, not an option's stop) and your limits, `RISK_CAPITAL`, `RISK_PER_TRADE_PCT` and `RISK_MAX_DAILY_LOSS` (rupees; see `.env.example`; none has a default,
+and with none set it gives the loss per lot and says how to set one). It answers how many lots keep the loss at that stop inside the per-trade limit and what is left of the day's (the day's realised
+loss from the trade log is taken off), says which limit decides, and warns when not even one lot fits. Reaching the day's loss limit shows as a red alert on every tab and raises one warning. It does
+not say whether to trade, and the loss at the stop ignores slippage, a gap through the stop, brokerage and tax.
+
+**Which strategies work: `python -m app.outcomes`.** `python -m app.outcomes logs/decisions-2026-11-11.jsonl [--candles day.json] [--json]` replays every setup that reached `READY_TO_ACT` against the
+day's 1-minute candles (from Prism DB through the app's own read-only loader, or from a file). The entry is the spot price on the journal record of the **first** moment the setup was ready, with the
+levels it showed then, and the replay starts at the next whole minute. It stops at the first of: the invalidation level touched (`invalidation`), the first target beyond the entry touched
+(`target1`), Prism ending the setup (`setup_ended`, at the price of that journal record) or the close (`unresolved`, marked at the last close); a candle that touches both is counted as the
+invalidation and says so. Results are in R (the risk is the entry minus the invalidation: target 1 is its distance over that, the invalidation is -1), with the best and worst the trade showed, whether target 2
+was reached after target 1, and a tally per strategy. **It is index points, not option premium or profit**: no slippage, cost or tax, and a few sessions are a small sample: it says which strategy to look at
+again, not what to trust. Setups that were never ready are listed with the reason they ended. Run on the real journal of 2026-11-11 it listed its one ready setup and said the 1-minute candles of that day were
+not yet in Prism DB (run the daily update after the close, then the review); the replay itself has only been checked on hand-made candles.
+
+**Checking a day: `python -m app.session_check`.** The automatic half of "Validating during market hours". `python -m app.session_check logs/decisions-2026-11-11.jsonl` tests every BUY in the journal
+against the rules (inside the session, not from 09:15 to 09:30, not from 14:45, on trusted data and a connected feed, after its confirming 5M candle completed, with the price in the entry area and nothing blocking, the
+invalidation on the right side of the price, the 1H / 15M trend rule with the granted counter-trend permission as its one exception, never a BUY while a CE and a PE setup are both ready), that nothing that ended is live again and
+nothing is announced twice, that the file itself passes `--verify`, and that the journal covers the session (a late start, an early end or a silent stretch is a warning, not a failure). It says what kind of day it was
+(opening gap, the regime for most of the time, volatile or not) and prints the **manual list** it cannot do (the chart comparison, whether the trigger is where you would put it, whether you agree). The exit status is 1 when a check fails.
+`--coverage` over many files shows which kinds of day (gap up, gap down, flat open, trending, range-bound, volatile) have a clean check with a BUY in it, which is what the runbook's "repeat on different kinds of sessions" asks
+for; an expiry day cannot be told from the journal. A PASS is the absence of a counter-example, not a judgement of the decisions. On the real journals it found no counter-example in the 505 BUY records of 2026-11-11 (a
+session Prism joined at 11:09:45, so the open is a warning), and the days of 6 and 10 November, with no BUY, have nothing to test the BUY rules on.
+
+**The daily candle update no longer holds a password.** `angelone/daily_update.py` (the script you run to add a day's candles to Prism DB) used to carry the database password in the file. It now reads
+`PG_HOST` / `PG_PORT` / `PG_USER` / `PG_PASSWORD` / `PG_DBNAME` (the names Prism uses) from the environment or from the git-ignored `.env`, and stops saying what to set when there is no password. It writes to the database, so its
+role needs insert rights, which Prism's read-only role should not have.
 
 ### The NIFTY futures probe (groundwork for VWAP strategies; Stage 2.4)
 
@@ -848,5 +905,7 @@ same version of the probe only: the superseded first run's file (below) still ca
   four-candle entry window is announced as new; the same happens to a setup whose only announcement was in a record cut
   short by a crash. A structure that formed while the app was down is announced when it is next seen. One setup per
   strategy and side at a time.
+- **Stage 8 was verified with fakes only.** The alerts, the Trades tab and the size calculator were exercised with the page's own script under node and with fake servers, never in a browser during a session; the rollover with fake sockets and a fake clock; the
+  outcome review and the session check with hand-made records and candles. The real journals of 6, 10 and 11 November went through the session check; no real candles were available for the outcome replay.
 - Weekend special sessions and exchange holidays are not known. A holiday has no candles and no ticks, and without a
   fresh tick nothing is ever actionable (the decision says there is no recent price tick).
